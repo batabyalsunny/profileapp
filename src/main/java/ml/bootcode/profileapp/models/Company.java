@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ml.bootcode.profileapp.model;
+package ml.bootcode.profileapp.models;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -37,9 +37,8 @@ public class Company {
 	 * @param name
 	 * @param employees
 	 */
-	public Company(String name, Set<Employee> employees) {
+	public Company(String name) {
 		this.name = name;
-		this.employees = employees;
 	}
 
 	/**
