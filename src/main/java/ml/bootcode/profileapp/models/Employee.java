@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ml.bootcode.profileapp.model;
+package ml.bootcode.profileapp.models;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,7 +20,7 @@ import javax.persistence.ManyToOne;
 public class Employee {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long ID;
 	private String firstName;
 	private String lastName;
@@ -28,7 +28,7 @@ public class Employee {
 	private String phoneNumber;
 	
 	@ManyToOne(targetEntity = Company.class)
-	private Set<Company> company = new HashSet<>();
+	private Company company = new Company();
 
 	/**
 	 * 
@@ -43,13 +43,13 @@ public class Employee {
 	 * @param phoneNumber
 	 * @param company
 	 */
-	public Employee(String firstName, String lastName, String email, String phoneNumber, Set<Company> company) {
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.phoneNumber = phoneNumber;
-		this.company = company;
-	}
+    public Employee(String firstName, String lastName, String email, String phoneNumber, Company company) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.company = company;
+    }
 
 	/**
 	 * @return the iD
@@ -124,16 +124,16 @@ public class Employee {
 	/**
 	 * @return the company
 	 */
-	public Set<Company> getCompany() {
-		return company;
-	}
+    public Company getCompany() {
+        return company;
+    }
 
-	/**
+    /**
 	 * @param company the company to set
 	 */
-	public void setCompany(Set<Company> company) {
-		this.company = company;
-	}
+    public void setCompany(Company company) {
+        this.company = company;
+    }
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()

@@ -1,9 +1,11 @@
 /**
  * 
  */
-package ml.bootcode.profileapp.model;
+package ml.bootcode.profileapp.models;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -20,13 +22,10 @@ import javax.persistence.OneToMany;
 public class Company {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long ID;
 	private String name;
-	
-	@OneToMany(mappedBy = "company")
-	private Set<Employee> employees = new HashSet<>();
-	
+
 	/**
 	 * 
 	 */
@@ -35,11 +34,9 @@ public class Company {
 
 	/**
 	 * @param name
-	 * @param employees
 	 */
-	public Company(String name, Set<Employee> employees) {
+	public Company(String name) {
 		this.name = name;
-		this.employees = employees;
 	}
 
 	/**
@@ -68,20 +65,6 @@ public class Company {
 	 */
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	/**
-	 * @return the employees
-	 */
-	public Set<Employee> getEmployees() {
-		return employees;
-	}
-
-	/**
-	 * @param employees the employees to set
-	 */
-	public void setEmployees(Set<Employee> employees) {
-		this.employees = employees;
 	}
 
 	/* (non-Javadoc)
@@ -120,6 +103,9 @@ public class Company {
 	 */
 	@Override
 	public String toString() {
-		return "Company [ID=" + ID + ", name=" + name + ", employees=" + employees + "]";
+		return "Company{" +
+				"ID=" + ID +
+				", name='" + name + '\'' +
+				'}';
 	}
 }
