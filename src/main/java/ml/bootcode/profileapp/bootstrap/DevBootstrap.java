@@ -44,12 +44,20 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 	private void initData() {
 		
 		Company mfs = new Company("Mindfire Solutions");
-		Employee sunny = new Employee("Sunny", "Batabyal", "sunnyb@mindfiresolutions.com", "123456789" );
-		mfs.getEmployees().add(sunny);
-		sunny.getCompany().add(mfs);
-		
-		
+		Company infi = new Company("Infosys");
+		Company google = new Company("Google");
+		Employee sunny = new Employee("Sunny", "Batabyal", "sunnyb@mindfiresolutions.com", "123456789", mfs);
+		Employee ashish = new Employee("Ashish", "Roy", "ashish.roy@mindfiresolutions.com", "123456789", google);
+		Employee subhankar = new Employee("Subhankar", "Das", "subhankard@mindfiresolutions.com", "123456789", mfs);
+		Employee pasherBari = new Employee("Pasher", "Bari", "pasher_barir.chele@infosys.com", "123456789", infi);
+
 		companyRepository.save(mfs);
+		companyRepository.save(infi);
+		companyRepository.save(google);
+
 		employeeRepository.save(sunny);
+		employeeRepository.save(ashish);
+		employeeRepository.save(subhankar);
+		employeeRepository.save(pasherBari);
 	}
 }
