@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ml.bootcode.profileapp.model;
+package ml.bootcode.profileapp.models;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -41,14 +41,12 @@ public class Employee {
 	 * @param lastName
 	 * @param email
 	 * @param phoneNumber
-	 * @param company
 	 */
-	public Employee(String firstName, String lastName, String email, String phoneNumber, Set<Company> company) {
+	public Employee(String firstName, String lastName, String email, String phoneNumber) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.phoneNumber = phoneNumber;
-		this.company = company;
 	}
 
 	/**
