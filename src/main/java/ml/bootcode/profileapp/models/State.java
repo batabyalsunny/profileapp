@@ -3,11 +3,8 @@
  */
 package ml.bootcode.profileapp.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * @author sunnyb
@@ -21,7 +18,10 @@ public class State {
 	private Long id;
 	private String name;
 
-	@ManyToOne(targetEntity = Country.class)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "state")
+	private List<City> cities;
+
+	@ManyToOne
 	private Country country;
 
 	/**
@@ -31,12 +31,10 @@ public class State {
 	}
 
 	/**
-	 * @param id
 	 * @param name
 	 * @param country
 	 */
-	public State(Long id, String name, Country country) {
-		this.id = id;
+	public State(String name, Country country) {
 		this.name = name;
 		this.country = country;
 	}
@@ -67,6 +65,14 @@ public class State {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public List<City> getCities() {
+		return cities;
+	}
+
+	public void setCities(List<City> cities) {
+		this.cities = cities;
 	}
 
 	/**
