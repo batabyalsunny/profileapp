@@ -28,11 +28,9 @@ public class Country {
 	}
 
 	/**
-	 * @param id
 	 * @param name
 	 */
 	public Country(String name) {
-		this.id = id;
 		this.name = name;
 	}
 
