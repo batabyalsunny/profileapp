@@ -3,14 +3,16 @@
  */
 package ml.bootcode.profileapp.repositories;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 
 import ml.bootcode.profileapp.models.Employee;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author sunny
  *
  */
-public interface EmployeeRepository extends CrudRepository<Employee, Long> {
-
+@Repository
+public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 }
