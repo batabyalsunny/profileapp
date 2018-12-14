@@ -11,11 +11,15 @@ public interface CountryService {
 
 	CountryDTO getCountry(Long id);
 
-	CountryDTO addOrUpdateCountry(CountryDTO countryDTO);
+	CountryDTO addCountry(CountryDTO countryDTO);
+
+	CountryDTO updateCountry(Long id, CountryDTO countryDTO);
 
 	void deleteCountry(Long id);
 
 	CountryDTO mapObjectToDto(Country country);
 
 	void mapDtoToObject(CountryDTO countryDTO, Country country);
+
+	Country validateCountry(Long id);
 }

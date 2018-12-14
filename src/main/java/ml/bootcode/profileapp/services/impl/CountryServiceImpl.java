@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import ml.bootcode.profileapp.dto.CountryDTO;
@@ -35,14 +36,14 @@ public class CountryServiceImpl implements CountryService {
 	@Override
 	public CountryDTO getCountry(Long id) {
 
-		// Get country optional.
-		Optional<Country> countryOptional = countryRepository.findById(id);
+		// Get the validated country from DB.
+		Country country = validateCountry(id);
 
-		return mapObjectToDto(countryOptional.get());
+		return mapObjectToDto(country);
 	}
 
 	@Override
-	public CountryDTO addOrUpdateCountry(CountryDTO countryDTO) {
+	public CountryDTO addCountry(CountryDTO countryDTO) {
 
 		// Create new country object.
 		Country country = new Country();
@@ -54,8 +55,24 @@ public class CountryServiceImpl implements CountryService {
 	}
 
 	@Override
+	public CountryDTO updateCountry(Long id, CountryDTO countryDTO) {
+
+		// Get the validated country from DB.
+		Country country = validateCountry(id);
+
+		// Map DTO to object.
+		mapDtoToObject(countryDTO, country);
+
+		return mapObjectToDto(countryRepository.save(country));
+	}
+
+	@Override
 	public void deleteCountry(Long id) {
-		countryRepository.deleteById(id);
+
+		// Validate country.
+		Country country = validateCountry(id);
+
+		countryRepository.delete(country);
 	}
 
 	@Override
@@ -77,5 +94,19 @@ public class CountryServiceImpl implements CountryService {
 
 		// Set all the properties from countryDTO.
 		country.setName(countryDTO.getName());
+	}
+
+	@Override
+	public Country validateCountry(Long id) {
+
+		// Get country optional.
+		Optional<Country> countryOptional = countryRepository.findById(id);
+
+		// Check if country is present.
+		if (!countryOptional.isPresent()) {
+			throw new RuntimeException("Requested resource not found");
+		}
+
+		return countryOptional.get();
 	}
 }
