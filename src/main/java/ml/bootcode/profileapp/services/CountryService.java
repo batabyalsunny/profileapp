@@ -1,18 +1,21 @@
 package ml.bootcode.profileapp.services;
 
+import java.util.List;
+
 import ml.bootcode.profileapp.dto.CountryDTO;
 import ml.bootcode.profileapp.models.Country;
 
-import java.util.List;
-
 public interface CountryService {
 
-    List<CountryDTO> getCountries();
-    CountryDTO getCountry(Long id);
-    CountryDTO addCountry();
-    CountryDTO updateCountry(Long id);
-    void deleteCountry(Long id);
+	List<CountryDTO> getCountries();
 
-    CountryDTO mapObjectToDto(Country country);
-    void mapDtoToObject(CountryDTO countryDTO, Country country);
+	CountryDTO getCountry(Long id);
+
+	CountryDTO addOrUpdateCountry(CountryDTO countryDTO);
+
+	void deleteCountry(Long id);
+
+	CountryDTO mapObjectToDto(Country country);
+
+	void mapDtoToObject(CountryDTO countryDTO, Country country);
 }
