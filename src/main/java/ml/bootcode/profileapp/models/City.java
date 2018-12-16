@@ -1,10 +1,17 @@
 /**
- * 
+ *
  */
 package ml.bootcode.profileapp.models;
 
-import javax.persistence.*;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  * @author sunnyb
@@ -23,6 +30,12 @@ public class City {
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "city")
 	private List<Address> addresses;
+
+	/**
+	 *
+	 */
+	public City() {
+	}
 
 	/**
 	 * @param state

@@ -1,13 +1,13 @@
 /**
- * 
+ *
  */
 package ml.bootcode.profileapp.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import ml.bootcode.profileapp.models.State;
-
-import javax.persistence.*;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import ml.bootcode.profileapp.models.State;
 
 /**
  * @author sunnyb

@@ -1,53 +1,26 @@
 /**
  *
  */
-package ml.bootcode.profileapp.models;
+package ml.bootcode.profileapp.dto;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import ml.bootcode.profileapp.models.City;
+import ml.bootcode.profileapp.models.Country;
 
 /**
- * @author sunnyb
+ * @author sunnybatabyal
  *
  */
-@Entity
-public class State {
+public class StateDTO {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "state")
+	@JsonIgnore
 	private List<City> cities;
-
-	@ManyToOne
-	@JsonManagedReference
 	private Country country;
-
-	/**
-	 *
-	 */
-	public State() {
-	}
-
-	/**
-	 * @param name
-	 * @param country
-	 */
-	public State(String name, Country country) {
-		this.name = name;
-		this.country = country;
-	}
 
 	/**
 	 * @return the id
@@ -98,5 +71,4 @@ public class State {
 	public void setCountry(Country country) {
 		this.country = country;
 	}
-
 }

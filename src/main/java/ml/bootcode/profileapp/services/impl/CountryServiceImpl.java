@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import ml.bootcode.profileapp.dto.CountryDTO;
@@ -103,9 +102,8 @@ public class CountryServiceImpl implements CountryService {
 		Optional<Country> countryOptional = countryRepository.findById(id);
 
 		// Check if country is present.
-		if (!countryOptional.isPresent()) {
+		if (!countryOptional.isPresent())
 			throw new RuntimeException("Requested resource not found");
-		}
 
 		return countryOptional.get();
 	}

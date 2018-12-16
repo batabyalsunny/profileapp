@@ -3,8 +3,16 @@
  */
 package ml.bootcode.profileapp.models;
 
-import javax.persistence.*;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 /**
  * @author sunnyb
@@ -19,6 +27,7 @@ public class Country {
 	private String name;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "country")
+	@JsonBackReference
 	private List<State> states;
 
 	/**

@@ -3,13 +3,24 @@
  */
 package ml.bootcode.profileapp.bootstrap;
 
-import java.util.Set;
-
-import ml.bootcode.profileapp.models.*;
-import ml.bootcode.profileapp.repositories.*;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+
+import ml.bootcode.profileapp.models.Address;
+import ml.bootcode.profileapp.models.City;
+import ml.bootcode.profileapp.models.Company;
+import ml.bootcode.profileapp.models.Country;
+import ml.bootcode.profileapp.models.Designation;
+import ml.bootcode.profileapp.models.Employee;
+import ml.bootcode.profileapp.models.State;
+import ml.bootcode.profileapp.repositories.AddressRepository;
+import ml.bootcode.profileapp.repositories.CityRepository;
+import ml.bootcode.profileapp.repositories.CompanyRepository;
+import ml.bootcode.profileapp.repositories.CountryRepository;
+import ml.bootcode.profileapp.repositories.DesignationRepository;
+import ml.bootcode.profileapp.repositories.EmployeeRepository;
+import ml.bootcode.profileapp.repositories.StateRepository;
 
 /**
  * @author sunny
