@@ -23,7 +23,7 @@ import ml.bootcode.profileapp.services.StateService;
 @RequestMapping("api/v1/states")
 public class StateController {
 
-	StateService stateService;
+	private StateService stateService;
 
 	/**
 	 * @param stateService
@@ -32,7 +32,7 @@ public class StateController {
 		this.stateService = stateService;
 	}
 
-	@GetMapping("")
+	@GetMapping
 	public List<StateDTO> getStates() {
 		return stateService.getStates();
 	}
@@ -42,7 +42,7 @@ public class StateController {
 		return stateService.getState(id);
 	}
 
-	@PostMapping("")
+	@PostMapping
 	public StateDTO createState(@RequestBody StateDTO stateDTO) {
 		return stateService.addState(stateDTO);
 	}

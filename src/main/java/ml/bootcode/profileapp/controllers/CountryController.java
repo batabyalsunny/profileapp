@@ -18,13 +18,13 @@ import ml.bootcode.profileapp.services.CountryService;
 @RequestMapping("api/v1/countries")
 public class CountryController {
 
-	CountryService countryService;
+	private CountryService countryService;
 
 	public CountryController(CountryService countryService) {
 		this.countryService = countryService;
 	}
 
-	@GetMapping("")
+	@GetMapping
 	public List<CountryDTO> getCountries() {
 		return countryService.getCountries();
 	}
@@ -34,7 +34,7 @@ public class CountryController {
 		return countryService.getCountry(id);
 	}
 
-	@PostMapping("")
+	@PostMapping
 	public CountryDTO createCountry(@RequestBody CountryDTO countryDTO) {
 		return countryService.addCountry(countryDTO);
 	}
