@@ -3,12 +3,7 @@
  */
 package ml.bootcode.profileapp.dto;
 
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import ml.bootcode.profileapp.models.City;
-import ml.bootcode.profileapp.models.Country;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author sunnybatabyal
@@ -18,9 +13,8 @@ public class StateDTO {
 
 	private Long id;
 	private String name;
-	@JsonIgnore
-	private List<City> cities;
-	private Country country;
+	@JsonProperty("country")
+	private CountryDTO countryDTO;
 
 	/**
 	 * @return the id
@@ -50,25 +44,17 @@ public class StateDTO {
 		this.name = name;
 	}
 
-	public List<City> getCities() {
-		return cities;
-	}
-
-	public void setCities(List<City> cities) {
-		this.cities = cities;
+	/**
+	 * @return the countryDTO
+	 */
+	public CountryDTO getCountryDTO() {
+		return countryDTO;
 	}
 
 	/**
-	 * @return the country
+	 * @param countryDTO the countryDTO to set
 	 */
-	public Country getCountry() {
-		return country;
-	}
-
-	/**
-	 * @param country the country to set
-	 */
-	public void setCountry(Country country) {
-		this.country = country;
+	public void setCountryDTO(CountryDTO countryDTO) {
+		this.countryDTO = countryDTO;
 	}
 }

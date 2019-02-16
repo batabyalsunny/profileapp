@@ -4,17 +4,22 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ml.bootcode.profileapp.dto.CountryDTO;
+import ml.bootcode.profileapp.dto.StateDTO;
 import ml.bootcode.profileapp.models.Country;
 import ml.bootcode.profileapp.repositories.CountryRepository;
 import ml.bootcode.profileapp.services.CountryService;
+import ml.bootcode.profileapp.services.StateService;
 
 @Service
 public class CountryServiceImpl implements CountryService {
 
 	CountryRepository countryRepository;
+	@Autowired
+	StateService stateService;
 
 	public CountryServiceImpl(CountryRepository countryRepository) {
 		this.countryRepository = countryRepository;
@@ -27,9 +32,7 @@ public class CountryServiceImpl implements CountryService {
 		List<Country> countries = countryRepository.findAll();
 
 		// Convert to dto and return.
-		return countries.stream().map(country -> {
-			return mapObjectToDto(country);
-		}).collect(Collectors.toList());
+		return countries.stream().map(this::mapObjectToDto).collect(Collectors.toList());
 	}
 
 	@Override
@@ -74,6 +77,23 @@ public class CountryServiceImpl implements CountryService {
 		countryRepository.delete(country);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * ml.bootcode.profileapp.services.CountryService#getStatesByCountryId(java.lang
+	 * .Long)
+	 */
+	@Override
+	public List<StateDTO> getStatesByCountryId(Long id) {
+
+		// Validate the country.
+		Country country = validateCountry(id);
+
+		// Get states and map to state dto.
+		return country.getStates().stream().map(stateService::mapObjectToDto).collect(Collectors.toList());
+	}
+
 	@Override
 	public CountryDTO mapObjectToDto(Country country) {
 
@@ -83,7 +103,6 @@ public class CountryServiceImpl implements CountryService {
 		// Set all the properties from the country object.
 		countryDTO.setId(country.getId());
 		countryDTO.setName(country.getName());
-		countryDTO.setStates(country.getStates());
 
 		return countryDTO;
 	}
@@ -103,7 +122,7 @@ public class CountryServiceImpl implements CountryService {
 
 		// Check if country is present.
 		if (!countryOptional.isPresent())
-			throw new RuntimeException("Requested resource not found");
+			throw new RuntimeException("Requested country not found");
 
 		return countryOptional.get();
 	}

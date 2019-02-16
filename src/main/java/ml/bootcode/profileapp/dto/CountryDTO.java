@@ -3,12 +3,6 @@
  */
 package ml.bootcode.profileapp.dto;
 
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import ml.bootcode.profileapp.models.State;
-
 /**
  * @author sunnyb
  *
@@ -17,9 +11,6 @@ public class CountryDTO {
 
 	private Long id;
 	private String name;
-
-	@JsonIgnore
-	private List<State> states;
 
 	public Long getId() {
 		return id;
@@ -35,13 +26,5 @@ public class CountryDTO {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public List<State> getStates() {
-		return states;
-	}
-
-	public void setStates(List<State> states) {
-		this.states = states;
 	}
 }

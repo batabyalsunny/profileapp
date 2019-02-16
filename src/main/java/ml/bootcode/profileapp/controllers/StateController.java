@@ -5,9 +5,11 @@ package ml.bootcode.profileapp.controllers;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,5 +47,15 @@ public class StateController {
 	@PostMapping
 	public StateDTO createState(@RequestBody StateDTO stateDTO) {
 		return stateService.addState(stateDTO);
+	}
+
+	@PutMapping("{id}")
+	public StateDTO updateCountry(@PathVariable Long id, @RequestBody StateDTO stateDTO) {
+		return stateService.updateState(id, stateDTO);
+	}
+
+	@DeleteMapping("{id}")
+	public void deleteCountry(@PathVariable Long id) {
+		stateService.deleteState(id);
 	}
 }

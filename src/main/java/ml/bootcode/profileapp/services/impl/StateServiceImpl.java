@@ -10,8 +10,10 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import ml.bootcode.profileapp.dto.StateDTO;
+import ml.bootcode.profileapp.models.Country;
 import ml.bootcode.profileapp.models.State;
 import ml.bootcode.profileapp.repositories.StateRepository;
+import ml.bootcode.profileapp.services.CountryService;
 import ml.bootcode.profileapp.services.StateService;
 
 /**
@@ -22,12 +24,15 @@ import ml.bootcode.profileapp.services.StateService;
 public class StateServiceImpl implements StateService {
 
 	private StateRepository stateRepository;
+	private CountryService countryService;
 
 	/**
 	 * @param stateRepository
+	 * @param countryService
 	 */
-	public StateServiceImpl(StateRepository stateRepository) {
+	public StateServiceImpl(StateRepository stateRepository, CountryService countryService) {
 		this.stateRepository = stateRepository;
+		this.countryService = countryService;
 	}
 
 	/*
@@ -66,6 +71,7 @@ public class StateServiceImpl implements StateService {
 
 		State state = new State();
 		mapDtoToObject(stateDTO, state);
+
 		return mapObjectToDto(stateRepository.save(state));
 	}
 
@@ -77,8 +83,13 @@ public class StateServiceImpl implements StateService {
 	 */
 	@Override
 	public StateDTO updateState(Long id, StateDTO stateDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		// Validate state.
+		State state = validateState(id);
+		mapDtoToObject(stateDTO, state);
+
+		// Update state.
+		return mapObjectToDto(stateRepository.save(state));
 	}
 
 	/*
@@ -88,8 +99,9 @@ public class StateServiceImpl implements StateService {
 	 */
 	@Override
 	public void deleteState(Long id) {
-		// TODO Auto-generated method stub
 
+		// Validate and delete state.
+		stateRepository.delete(validateState(id));
 	}
 
 	@Override
@@ -99,8 +111,8 @@ public class StateServiceImpl implements StateService {
 
 		stateDTO.setId(state.getId());
 		stateDTO.setName(state.getName());
-		stateDTO.setCities(state.getCities());
-		stateDTO.setCountry(state.getCountry());
+
+		stateDTO.setCountryDTO(countryService.mapObjectToDto(state.getCountry()));
 
 		return stateDTO;
 	}
@@ -109,7 +121,11 @@ public class StateServiceImpl implements StateService {
 	public void mapDtoToObject(StateDTO stateDTO, State state) {
 
 		state.setName(stateDTO.getName());
-		state.setCountry(stateDTO.getCountry());
+
+		// Validate the country id.
+		Country country = countryService.validateCountry(stateDTO.getCountryDTO().getId());
+
+		state.setCountry(country);
 	}
 
 	@Override
@@ -118,7 +134,7 @@ public class StateServiceImpl implements StateService {
 		Optional<State> stateOptional = stateRepository.findById(id);
 
 		if (!stateOptional.isPresent())
-			throw new RuntimeException("Requested resource not found");
+			throw new RuntimeException("Requested state not found");
 
 		return stateOptional.get();
 	}
