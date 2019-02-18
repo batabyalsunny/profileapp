@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ml.bootcode.profileapp.dto.StateDTO;
-import ml.bootcode.profileapp.models.Country;
 import ml.bootcode.profileapp.models.State;
 import ml.bootcode.profileapp.repositories.StateRepository;
-import ml.bootcode.profileapp.services.CountryService;
 import ml.bootcode.profileapp.services.StateService;
 
 /**
@@ -24,15 +24,16 @@ import ml.bootcode.profileapp.services.StateService;
 public class StateServiceImpl implements StateService {
 
 	private StateRepository stateRepository;
-	private CountryService countryService;
+
+	@Autowired
+	ModelMapper mapper;
 
 	/**
 	 * @param stateRepository
 	 * @param countryService
 	 */
-	public StateServiceImpl(StateRepository stateRepository, CountryService countryService) {
+	public StateServiceImpl(StateRepository stateRepository) {
 		this.stateRepository = stateRepository;
-		this.countryService = countryService;
 	}
 
 	/*
@@ -44,7 +45,9 @@ public class StateServiceImpl implements StateService {
 	public List<StateDTO> getStates() {
 
 		List<State> states = stateRepository.findAll();
-		return states.stream().map(this::mapObjectToDto).collect(Collectors.toList());
+		return states.stream().map(state -> {
+			return mapper.map(state, StateDTO.class);
+		}).collect(Collectors.toList());
 	}
 
 	/*
@@ -56,7 +59,7 @@ public class StateServiceImpl implements StateService {
 	public StateDTO getState(Long id) {
 
 		State state = validateState(id);
-		return mapObjectToDto(state);
+		return mapper.map(state, StateDTO.class);
 	}
 
 	/*
@@ -69,10 +72,9 @@ public class StateServiceImpl implements StateService {
 	@Override
 	public StateDTO addState(StateDTO stateDTO) {
 
-		State state = new State();
-		mapDtoToObject(stateDTO, state);
+		State state = mapper.map(stateDTO, State.class);
 
-		return mapObjectToDto(stateRepository.save(state));
+		return mapper.map(stateRepository.save(state), StateDTO.class);
 	}
 
 	/*
@@ -86,10 +88,12 @@ public class StateServiceImpl implements StateService {
 
 		// Validate state.
 		State state = validateState(id);
-		mapDtoToObject(stateDTO, state);
+
+		// Set state ID to DTO.
+		stateDTO.setId(state.getId());
 
 		// Update state.
-		return mapObjectToDto(stateRepository.save(state));
+		return mapper.map(stateRepository.save(mapper.map(stateDTO, State.class)), StateDTO.class);
 	}
 
 	/*
@@ -102,30 +106,6 @@ public class StateServiceImpl implements StateService {
 
 		// Validate and delete state.
 		stateRepository.delete(validateState(id));
-	}
-
-	@Override
-	public StateDTO mapObjectToDto(State state) {
-
-		StateDTO stateDTO = new StateDTO();
-
-		stateDTO.setId(state.getId());
-		stateDTO.setName(state.getName());
-
-		stateDTO.setCountryDTO(countryService.mapObjectToDto(state.getCountry()));
-
-		return stateDTO;
-	}
-
-	@Override
-	public void mapDtoToObject(StateDTO stateDTO, State state) {
-
-		state.setName(stateDTO.getName());
-
-		// Validate the country id.
-		Country country = countryService.validateCountry(stateDTO.getCountryDTO().getId());
-
-		state.setCountry(country);
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,14 +13,14 @@ import ml.bootcode.profileapp.dto.StateDTO;
 import ml.bootcode.profileapp.models.Country;
 import ml.bootcode.profileapp.repositories.CountryRepository;
 import ml.bootcode.profileapp.services.CountryService;
-import ml.bootcode.profileapp.services.StateService;
 
 @Service
 public class CountryServiceImpl implements CountryService {
 
 	CountryRepository countryRepository;
+
 	@Autowired
-	StateService stateService;
+	ModelMapper mapper;
 
 	public CountryServiceImpl(CountryRepository countryRepository) {
 		this.countryRepository = countryRepository;
@@ -32,7 +33,9 @@ public class CountryServiceImpl implements CountryService {
 		List<Country> countries = countryRepository.findAll();
 
 		// Convert to dto and return.
-		return countries.stream().map(this::mapObjectToDto).collect(Collectors.toList());
+		return countries.stream().map(country -> {
+			return mapper.map(country, CountryDTO.class);
+		}).collect(Collectors.toList());
 	}
 
 	@Override
@@ -41,19 +44,16 @@ public class CountryServiceImpl implements CountryService {
 		// Get the validated country from DB.
 		Country country = validateCountry(id);
 
-		return mapObjectToDto(country);
+		return mapper.map(country, CountryDTO.class);
 	}
 
 	@Override
 	public CountryDTO addCountry(CountryDTO countryDTO) {
 
-		// Create new country object.
-		Country country = new Country();
-
 		// Map DTO to object.
-		mapDtoToObject(countryDTO, country);
+		Country country = mapper.map(countryDTO, Country.class);
 
-		return mapObjectToDto(countryRepository.save(country));
+		return mapper.map(countryRepository.save(country), CountryDTO.class);
 	}
 
 	@Override
@@ -62,10 +62,10 @@ public class CountryServiceImpl implements CountryService {
 		// Get the validated country from DB.
 		Country country = validateCountry(id);
 
-		// Map DTO to object.
-		mapDtoToObject(countryDTO, country);
+		// Set the validated country ID to DTO.
+		countryDTO.setId(country.getId());
 
-		return mapObjectToDto(countryRepository.save(country));
+		return mapper.map(countryRepository.save(mapper.map(countryDTO, Country.class)), CountryDTO.class);
 	}
 
 	@Override
@@ -91,27 +91,9 @@ public class CountryServiceImpl implements CountryService {
 		Country country = validateCountry(id);
 
 		// Get states and map to state dto.
-		return country.getStates().stream().map(stateService::mapObjectToDto).collect(Collectors.toList());
-	}
-
-	@Override
-	public CountryDTO mapObjectToDto(Country country) {
-
-		// Create new DTO object.
-		CountryDTO countryDTO = new CountryDTO();
-
-		// Set all the properties from the country object.
-		countryDTO.setId(country.getId());
-		countryDTO.setName(country.getName());
-
-		return countryDTO;
-	}
-
-	@Override
-	public void mapDtoToObject(CountryDTO countryDTO, Country country) {
-
-		// Set all the properties from countryDTO.
-		country.setName(countryDTO.getName());
+		return country.getStates().stream().map(state -> {
+			return mapper.map(state, StateDTO.class);
+		}).collect(Collectors.toList());
 	}
 
 	@Override

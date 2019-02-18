@@ -20,9 +20,5 @@ public interface CountryService {
 
 	List<StateDTO> getStatesByCountryId(Long id);
 
-	CountryDTO mapObjectToDto(Country country);
-
-	void mapDtoToObject(CountryDTO countryDTO, Country country);
-
 	Country validateCountry(Long id);
 }

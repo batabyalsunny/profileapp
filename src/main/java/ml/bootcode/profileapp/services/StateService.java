@@ -24,9 +24,5 @@ public interface StateService {
 
 	void deleteState(Long id);
 
-	StateDTO mapObjectToDto(State state);
-
-	void mapDtoToObject(StateDTO stateDTO, State state);
-
 	State validateState(Long id);
 }
