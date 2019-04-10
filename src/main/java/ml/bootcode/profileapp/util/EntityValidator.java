@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 import ml.bootcode.profileapp.models.Country;
+import ml.bootcode.profileapp.models.State;
 import ml.bootcode.profileapp.repositories.CountryRepository;
 import ml.bootcode.profileapp.repositories.StateRepository;
 
@@ -33,6 +34,16 @@ public class EntityValidator {
 			throw new RuntimeException("Requested country not found");
 
 		return countryOptional.get();
+	}
+
+	public State validateState(Long id) {
+
+		Optional<State> stateOptional = stateRepository.findById(id);
+
+		if (!stateOptional.isPresent())
+			throw new RuntimeException("Requested state not found");
+
+		return stateOptional.get();
 	}
 
 }

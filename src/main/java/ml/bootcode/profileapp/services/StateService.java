@@ -6,7 +6,6 @@ package ml.bootcode.profileapp.services;
 import java.util.List;
 
 import ml.bootcode.profileapp.dto.StateDTO;
-import ml.bootcode.profileapp.models.State;
 
 /**
  * @author sunnybatabyal
@@ -23,6 +22,4 @@ public interface StateService {
 	StateDTO updateState(Long id, StateDTO stateDTO);
 
 	void deleteState(Long id);
-
-	State validateState(Long id);
 }

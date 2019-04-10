@@ -18,8 +18,8 @@ import ml.bootcode.profileapp.util.EntityValidator;
 @Service
 public class CountryServiceImpl implements CountryService {
 
-	CountryRepository countryRepository;
-	EntityValidator entityValidator;
+	private CountryRepository countryRepository;
+	private EntityValidator entityValidator;
 
 	@Autowired
 	ModelMapper mapper;
