@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +44,8 @@ public class StateServiceImpl implements StateService {
 	 */
 	@Override
 	public List<StateDTO> getStates() {
+		
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
 
 		List<State> states = stateRepository.findAll();
 		return states.stream().map(state -> {
@@ -71,6 +74,10 @@ public class StateServiceImpl implements StateService {
 	 */
 	@Override
 	public StateDTO addState(StateDTO stateDTO) {
+		
+		//
+
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
 
 		State state = mapper.map(stateDTO, State.class);
 

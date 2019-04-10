@@ -4,7 +4,6 @@ import java.util.List;
 
 import ml.bootcode.profileapp.dto.CountryDTO;
 import ml.bootcode.profileapp.dto.StateDTO;
-import ml.bootcode.profileapp.models.Country;
 
 public interface CountryService {
 
@@ -19,6 +18,4 @@ public interface CountryService {
 	void deleteCountry(Long id);
 
 	List<StateDTO> getStatesByCountryId(Long id);
-
-	Country validateCountry(Long id);
 }
