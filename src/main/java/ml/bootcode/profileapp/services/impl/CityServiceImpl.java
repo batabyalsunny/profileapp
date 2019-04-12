@@ -88,9 +88,17 @@ public class CityServiceImpl implements CityService {
 	 * .dto.CityDTO)
 	 */
 	@Override
-	public CityDTO updateCity(CityDTO cityDTO) {
-		// TODO Auto-generated method stub
-		return null;
+	public CityDTO updateCity(Long id, CityDTO cityDTO) {
+
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+
+		// Validate the city ID to update.
+		City city = entityValidator.validateCity(id);
+
+		// Set the city id to DTO.
+		cityDTO.setId(city.getId());
+
+		return mapper.map(cityRepository.save(mapper.map(cityDTO, City.class)), CityDTO.class);
 	}
 
 	/*
@@ -100,8 +108,7 @@ public class CityServiceImpl implements CityService {
 	 */
 	@Override
 	public void deleteCity(Long id) {
-		// TODO Auto-generated method stub
-
+		cityRepository.delete(entityValidator.validateCity(id));
 	}
 
 }

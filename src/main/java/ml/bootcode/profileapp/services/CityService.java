@@ -19,7 +19,7 @@ public interface CityService {
 
 	CityDTO addCity(CityDTO cityDTO);
 
-	CityDTO updateCity(CityDTO cityDTO);
+	CityDTO updateCity(Long id, CityDTO cityDTO);
 
 	void deleteCity(Long id);
 }

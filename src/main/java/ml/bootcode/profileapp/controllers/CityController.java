@@ -50,8 +50,8 @@ public class CityController {
 	}
 
 	@PutMapping("{id}")
-	public CityDTO updateCity(@RequestBody CityDTO cityDTO, @PathVariable Long id) {
-		return cityService.updateCity(cityDTO);
+	public CityDTO updateCity(@PathVariable Long id, @RequestBody CityDTO cityDTO) {
+		return cityService.updateCity(id, cityDTO);
 	}
 
 	@DeleteMapping("{id}")
