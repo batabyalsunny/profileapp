@@ -15,6 +15,7 @@ import ml.bootcode.profileapp.dto.CityDTO;
 import ml.bootcode.profileapp.models.City;
 import ml.bootcode.profileapp.repositories.CityRepository;
 import ml.bootcode.profileapp.services.CityService;
+import ml.bootcode.profileapp.util.EntityValidator;
 
 /**
  * @author sunnyb
@@ -24,6 +25,7 @@ import ml.bootcode.profileapp.services.CityService;
 public class CityServiceImpl implements CityService {
 
 	CityRepository cityRepository;
+	EntityValidator entityValidator;
 
 	@Autowired
 	ModelMapper mapper;
@@ -31,8 +33,9 @@ public class CityServiceImpl implements CityService {
 	/**
 	 * @param cityRepository
 	 */
-	public CityServiceImpl(CityRepository cityRepository) {
+	public CityServiceImpl(CityRepository cityRepository, EntityValidator entityValidator) {
 		this.cityRepository = cityRepository;
+		this.entityValidator = entityValidator;
 	}
 
 	/*
@@ -59,8 +62,7 @@ public class CityServiceImpl implements CityService {
 	 */
 	@Override
 	public CityDTO getCity(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return mapper.map(entityValidator.validateCity(id), CityDTO.class);
 	}
 
 	/*
