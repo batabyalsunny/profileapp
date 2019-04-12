@@ -4,9 +4,11 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
+import ml.bootcode.profileapp.models.Address;
 import ml.bootcode.profileapp.models.City;
 import ml.bootcode.profileapp.models.Country;
 import ml.bootcode.profileapp.models.State;
+import ml.bootcode.profileapp.repositories.AddressRepository;
 import ml.bootcode.profileapp.repositories.CityRepository;
 import ml.bootcode.profileapp.repositories.CountryRepository;
 import ml.bootcode.profileapp.repositories.StateRepository;
@@ -17,16 +19,20 @@ public class EntityValidator {
 	CountryRepository countryRepository;
 	StateRepository stateRepository;
 	CityRepository cityRepository;
+	AddressRepository addressRepository;
 
 	/**
 	 * @param countryRepository
 	 * @param stateRepository
+	 * @param cityRepository
+	 * @param addressRepository
 	 */
 	public EntityValidator(CountryRepository countryRepository, StateRepository stateRepository,
-			CityRepository cityRepository) {
+			CityRepository cityRepository, AddressRepository addressRepository) {
 		this.countryRepository = countryRepository;
 		this.stateRepository = stateRepository;
 		this.cityRepository = cityRepository;
+		this.addressRepository = addressRepository;
 	}
 
 	public Country validateCountry(Long id) {
@@ -59,6 +65,16 @@ public class EntityValidator {
 			throw new RuntimeException("Requested city not found");
 
 		return cityOptional.get();
+	}
+
+	public Address validateAddress(Long id) {
+
+		Optional<Address> addressOptional = addressRepository.findById(id);
+
+		if (!addressOptional.isPresent())
+			throw new RuntimeException("Requested address not found");
+
+		return addressOptional.get();
 	}
 
 }
