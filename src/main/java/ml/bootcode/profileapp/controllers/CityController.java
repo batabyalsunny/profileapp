@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ml.bootcode.profileapp.dto.AddressDTO;
 import ml.bootcode.profileapp.dto.CityDTO;
 import ml.bootcode.profileapp.services.CityService;
 
@@ -57,5 +58,10 @@ public class CityController {
 	@DeleteMapping("{id}")
 	public void deleteCity(@PathVariable Long id) {
 		cityService.deleteCity(id);
+	}
+
+	@GetMapping("{id}/addresses")
+	public List<AddressDTO> getAddresses(@PathVariable Long id) {
+		return cityService.getAddressesByCityId(id);
 	}
 }

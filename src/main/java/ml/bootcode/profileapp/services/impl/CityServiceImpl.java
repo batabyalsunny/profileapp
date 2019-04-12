@@ -11,6 +11,7 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ml.bootcode.profileapp.dto.AddressDTO;
 import ml.bootcode.profileapp.dto.CityDTO;
 import ml.bootcode.profileapp.models.City;
 import ml.bootcode.profileapp.repositories.CityRepository;
@@ -111,4 +112,23 @@ public class CityServiceImpl implements CityService {
 		cityRepository.delete(entityValidator.validateCity(id));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ml.bootcode.profileapp.services.CityService#getAddressesByCityId(java.lang.
+	 * Long)
+	 */
+	@Override
+	public List<AddressDTO> getAddressesByCityId(Long id) {
+
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+
+		// Validate city ID and get the city.
+		City city = entityValidator.validateCity(id);
+
+		return city.getAddresses().stream().map(address -> {
+			return mapper.map(address, AddressDTO.class);
+		}).collect(Collectors.toList());
+	}
 }

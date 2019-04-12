@@ -11,6 +11,7 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ml.bootcode.profileapp.dto.CityDTO;
 import ml.bootcode.profileapp.dto.StateDTO;
 import ml.bootcode.profileapp.models.Country;
 import ml.bootcode.profileapp.models.State;
@@ -124,5 +125,25 @@ public class StateServiceImpl implements StateService {
 
 		// Validate and delete state.
 		stateRepository.delete(entityValidator.validateState(id));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ml.bootcode.profileapp.services.StateService#getCitiesByStateId(java.lang.
+	 * Long)
+	 */
+	@Override
+	public List<CityDTO> getCitiesByStateId(Long id) {
+
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+
+		// Validate state ID.
+		State state = entityValidator.validateState(id);
+
+		return state.getCities().stream().map(city -> {
+			return mapper.map(city, CityDTO.class);
+		}).collect(Collectors.toList());
 	}
 }

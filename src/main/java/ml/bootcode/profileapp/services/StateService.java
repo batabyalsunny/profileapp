@@ -5,6 +5,7 @@ package ml.bootcode.profileapp.services;
 
 import java.util.List;
 
+import ml.bootcode.profileapp.dto.CityDTO;
 import ml.bootcode.profileapp.dto.StateDTO;
 
 /**
@@ -22,4 +23,6 @@ public interface StateService {
 	StateDTO updateState(Long id, StateDTO stateDTO);
 
 	void deleteState(Long id);
+
+	List<CityDTO> getCitiesByStateId(Long id);
 }
