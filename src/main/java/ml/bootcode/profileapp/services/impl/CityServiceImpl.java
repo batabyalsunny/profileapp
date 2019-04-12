@@ -74,8 +74,10 @@ public class CityServiceImpl implements CityService {
 	 */
 	@Override
 	public CityDTO addCity(CityDTO cityDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+
+		return mapper.map(cityRepository.save(mapper.map(cityDTO, City.class)), CityDTO.class);
 	}
 
 	/*

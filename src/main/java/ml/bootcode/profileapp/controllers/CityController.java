@@ -5,8 +5,12 @@ package ml.bootcode.profileapp.controllers;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,5 +42,20 @@ public class CityController {
 	@GetMapping("{id}")
 	public CityDTO getCity(@PathVariable Long id) {
 		return cityService.getCity(id);
+	}
+
+	@PostMapping
+	public CityDTO addCity(@RequestBody CityDTO cityDTO) {
+		return cityService.addCity(cityDTO);
+	}
+
+	@PutMapping("{id}")
+	public CityDTO updateCity(@RequestBody CityDTO cityDTO, @PathVariable Long id) {
+		return cityService.updateCity(cityDTO);
+	}
+
+	@DeleteMapping("{id}")
+	public void deleteCity(@PathVariable Long id) {
+		cityService.deleteCity(id);
 	}
 }
