@@ -16,6 +16,8 @@ public class EmployeeDTO {
 	private String lastName;
 	private String email;
 	private String phoneNumber;
+
+	@JsonProperty("address")
 	private AddressDTO addressDTO;
 
 	@JsonProperty("company")

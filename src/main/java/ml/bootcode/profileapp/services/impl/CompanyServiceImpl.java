@@ -111,10 +111,7 @@ public class CompanyServiceImpl implements CompanyService {
 	 */
 	@Override
 	public void deleteCompany(Long id) {
-
-		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
-
-		companyRepository.delete(mapper.map(entityValidator.validateCompany(id), Company.class));
+		companyRepository.delete(entityValidator.validateCompany(id));
 	}
 
 	/*
