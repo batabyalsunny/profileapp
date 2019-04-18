@@ -23,7 +23,7 @@ public class Company {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long ID;
+	private Long id;
 	private String name;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "company")
@@ -37,12 +37,12 @@ public class Company {
 		this.name = name;
 	}
 
-	public Long getID() {
-		return ID;
+	public Long getId() {
+		return id;
 	}
 
-	public void setID(Long ID) {
-		this.ID = ID;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getName() {

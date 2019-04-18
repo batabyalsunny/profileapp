@@ -9,21 +9,21 @@ package ml.bootcode.profileapp.dto;
  */
 public class CompanyDTO {
 
-	private Long ID;
+	private Long id;
 	private String name;
 
 	/**
 	 * @return the iD
 	 */
-	public Long getID() {
-		return ID;
+	public Long getId() {
+		return id;
 	}
 
 	/**
 	 * @param iD the iD to set
 	 */
-	public void setID(Long iD) {
-		ID = iD;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	/**

@@ -4,12 +4,18 @@
 package ml.bootcode.profileapp.services.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Service;
 
 import ml.bootcode.profileapp.dto.CompanyDTO;
 import ml.bootcode.profileapp.dto.EmployeeDTO;
+import ml.bootcode.profileapp.models.Company;
+import ml.bootcode.profileapp.repositories.CompanyRepository;
 import ml.bootcode.profileapp.services.CompanyService;
+import ml.bootcode.profileapp.util.EntityValidator;
 
 /**
  * @author sunnyb
@@ -18,6 +24,22 @@ import ml.bootcode.profileapp.services.CompanyService;
 @Service
 public class CompanyServiceImpl implements CompanyService {
 
+	CompanyRepository companyRepository;
+	ModelMapper mapper;
+	EntityValidator entityValidator;
+
+	/**
+	 * @param companyRepository
+	 * @param mapper
+	 * @param entityValidator
+	 */
+	public CompanyServiceImpl(CompanyRepository companyRepository, ModelMapper mapper,
+			EntityValidator entityValidator) {
+		this.companyRepository = companyRepository;
+		this.mapper = mapper;
+		this.entityValidator = entityValidator;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -25,8 +47,12 @@ public class CompanyServiceImpl implements CompanyService {
 	 */
 	@Override
 	public List<CompanyDTO> getCompanies() {
-		// TODO Auto-generated method stub
-		return null;
+
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+
+		return companyRepository.findAll().stream().map(company -> {
+			return mapper.map(company, CompanyDTO.class);
+		}).collect(Collectors.toList());
 	}
 
 	/*
@@ -37,8 +63,10 @@ public class CompanyServiceImpl implements CompanyService {
 	 */
 	@Override
 	public CompanyDTO getCompany(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+
+		return mapper.map(entityValidator.validateCompany(id), CompanyDTO.class);
 	}
 
 	/*
@@ -49,8 +77,10 @@ public class CompanyServiceImpl implements CompanyService {
 	 */
 	@Override
 	public CompanyDTO addCompany(CompanyDTO companyDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+
+		return mapper.map(companyRepository.save(mapper.map(companyDTO, Company.class)), CompanyDTO.class);
 	}
 
 	/*
@@ -62,8 +92,15 @@ public class CompanyServiceImpl implements CompanyService {
 	 */
 	@Override
 	public CompanyDTO updateCompany(Long id, CompanyDTO companyDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+
+		Company company = entityValidator.validateCompany(id);
+
+		// Set ID to DTO.
+		companyDTO.setId(id);
+
+		return mapper.map(companyRepository.save(mapper.map(companyDTO, Company.class)), CompanyDTO.class);
 	}
 
 	/*
@@ -74,8 +111,10 @@ public class CompanyServiceImpl implements CompanyService {
 	 */
 	@Override
 	public void deleteCompany(Long id) {
-		// TODO Auto-generated method stub
 
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+
+		companyRepository.delete(mapper.map(entityValidator.validateCompany(id), Company.class));
 	}
 
 	/*
@@ -87,8 +126,11 @@ public class CompanyServiceImpl implements CompanyService {
 	 */
 	@Override
 	public List<EmployeeDTO> getEmployeeByCompanyId(Long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+
+		return entityValidator.validateCompany(id).getEmployees().stream().map(employee -> {
+			return mapper.map(employee, EmployeeDTO.class);
+		}).collect(Collectors.toList());
+	}
 }
