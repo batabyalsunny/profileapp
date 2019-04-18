@@ -12,19 +12,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ml.bootcode.profileapp.dto.CountryDTO;
+import ml.bootcode.profileapp.dto.StateDTO;
 import ml.bootcode.profileapp.services.CountryService;
 
 @RestController
 @RequestMapping("api/v1/countries")
 public class CountryController {
 
-	CountryService countryService;
+	private CountryService countryService;
 
 	public CountryController(CountryService countryService) {
 		this.countryService = countryService;
 	}
 
-	@GetMapping("")
+	@GetMapping
 	public List<CountryDTO> getCountries() {
 		return countryService.getCountries();
 	}
@@ -34,7 +35,7 @@ public class CountryController {
 		return countryService.getCountry(id);
 	}
 
-	@PostMapping("")
+	@PostMapping
 	public CountryDTO createCountry(@RequestBody CountryDTO countryDTO) {
 		return countryService.addCountry(countryDTO);
 	}
@@ -47,5 +48,10 @@ public class CountryController {
 	@DeleteMapping("{id}")
 	public void deleteCountry(@PathVariable Long id) {
 		countryService.deleteCountry(id);
+	}
+
+	@GetMapping("{id}/states")
+	public List<StateDTO> getStates(@PathVariable Long id) {
+		return countryService.getStatesByCountryId(id);
 	}
 }

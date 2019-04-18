@@ -9,16 +9,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 /**
  * @author sunny
  *
  */
 @Entity
 public class Employee {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long ID;
+	private Long id;
 	private String firstName;
 	private String lastName;
 	private String email;
@@ -28,9 +30,11 @@ public class Employee {
 	private Address address;
 
 	@ManyToOne
+	@JsonManagedReference
 	private Company company;
 
 	@ManyToOne
+	@JsonManagedReference
 	private Designation designation;
 
 	public Employee() {
@@ -43,12 +47,12 @@ public class Employee {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public Long getID() {
-		return ID;
+	public Long getId() {
+		return id;
 	}
 
-	public void setID(Long ID) {
-		this.ID = ID;
+	public void setId(Long ID) {
+		this.id = ID;
 	}
 
 	public String getFirstName() {

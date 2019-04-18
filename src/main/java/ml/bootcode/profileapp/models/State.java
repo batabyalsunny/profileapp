@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
@@ -28,6 +29,7 @@ public class State {
 	private String name;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "state")
+	@JsonBackReference
 	private List<City> cities;
 
 	@ManyToOne

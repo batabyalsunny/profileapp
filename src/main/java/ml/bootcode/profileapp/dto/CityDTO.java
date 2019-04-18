@@ -1,20 +1,20 @@
 /**
- *
+ * 
  */
 package ml.bootcode.profileapp.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * @author sunnybatabyal
+ * @author sunnyb
  *
  */
-public class StateDTO {
+public class CityDTO {
 
 	private Long id;
 	private String name;
-	@JsonProperty("country")
-	private CountryDTO countryDTO;
+	@JsonProperty("state")
+	private StateDTO stateDTO;
 
 	/**
 	 * @return the id
@@ -45,16 +45,16 @@ public class StateDTO {
 	}
 
 	/**
-	 * @return the countryDTO
+	 * @return the stateDTO
 	 */
-	public CountryDTO getCountryDTO() {
-		return countryDTO;
+	public StateDTO getStateDTO() {
+		return stateDTO;
 	}
 
 	/**
-	 * @param countryDTO the countryDTO to set
+	 * @param stateDTO the stateDTO to set
 	 */
-	public void setCountryDTO(CountryDTO countryDTO) {
-		this.countryDTO = countryDTO;
+	public void setStateDTO(StateDTO stateDTO) {
+		this.stateDTO = stateDTO;
 	}
 }

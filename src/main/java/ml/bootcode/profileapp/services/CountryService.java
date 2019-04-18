@@ -3,7 +3,7 @@ package ml.bootcode.profileapp.services;
 import java.util.List;
 
 import ml.bootcode.profileapp.dto.CountryDTO;
-import ml.bootcode.profileapp.models.Country;
+import ml.bootcode.profileapp.dto.StateDTO;
 
 public interface CountryService {
 
@@ -17,9 +17,5 @@ public interface CountryService {
 
 	void deleteCountry(Long id);
 
-	CountryDTO mapObjectToDto(Country country);
-
-	void mapDtoToObject(CountryDTO countryDTO, Country country);
-
-	Country validateCountry(Long id);
+	List<StateDTO> getStatesByCountryId(Long id);
 }

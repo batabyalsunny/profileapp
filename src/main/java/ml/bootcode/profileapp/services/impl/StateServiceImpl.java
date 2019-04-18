@@ -4,15 +4,20 @@
 package ml.bootcode.profileapp.services.impl;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ml.bootcode.profileapp.dto.CityDTO;
 import ml.bootcode.profileapp.dto.StateDTO;
+import ml.bootcode.profileapp.models.Country;
 import ml.bootcode.profileapp.models.State;
 import ml.bootcode.profileapp.repositories.StateRepository;
 import ml.bootcode.profileapp.services.StateService;
+import ml.bootcode.profileapp.util.EntityValidator;
 
 /**
  * @author sunnybatabyal
@@ -22,12 +27,18 @@ import ml.bootcode.profileapp.services.StateService;
 public class StateServiceImpl implements StateService {
 
 	private StateRepository stateRepository;
+	private EntityValidator entityValidator;
+
+	@Autowired
+	ModelMapper mapper;
 
 	/**
 	 * @param stateRepository
+	 * @param countryService
 	 */
-	public StateServiceImpl(StateRepository stateRepository) {
+	public StateServiceImpl(StateRepository stateRepository, EntityValidator entityValidator) {
 		this.stateRepository = stateRepository;
+		this.entityValidator = entityValidator;
 	}
 
 	/*
@@ -38,8 +49,12 @@ public class StateServiceImpl implements StateService {
 	@Override
 	public List<StateDTO> getStates() {
 
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+
 		List<State> states = stateRepository.findAll();
-		return states.stream().map(this::mapObjectToDto).collect(Collectors.toList());
+		return states.stream().map(state -> {
+			return mapper.map(state, StateDTO.class);
+		}).collect(Collectors.toList());
 	}
 
 	/*
@@ -50,8 +65,10 @@ public class StateServiceImpl implements StateService {
 	@Override
 	public StateDTO getState(Long id) {
 
-		State state = validateState(id);
-		return mapObjectToDto(state);
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+
+		State state = entityValidator.validateState(id);
+		return mapper.map(state, StateDTO.class);
 	}
 
 	/*
@@ -64,9 +81,17 @@ public class StateServiceImpl implements StateService {
 	@Override
 	public StateDTO addState(StateDTO stateDTO) {
 
-		State state = new State();
-		mapDtoToObject(stateDTO, state);
-		return mapObjectToDto(stateRepository.save(state));
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+
+		// Validate country.
+		Country country = entityValidator.validateCountry(stateDTO.getCountryDTO().getId());
+
+		State state = mapper.map(stateDTO, State.class);
+
+		// Set country.
+		state.setCountry(country);
+
+		return mapper.map(stateRepository.save(state), StateDTO.class);
 	}
 
 	/*
@@ -77,8 +102,17 @@ public class StateServiceImpl implements StateService {
 	 */
 	@Override
 	public StateDTO updateState(Long id, StateDTO stateDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+
+		// Validate state.
+		State state = entityValidator.validateState(id);
+
+		// Set state ID to DTO.
+		stateDTO.setId(state.getId());
+
+		// Update state.
+		return mapper.map(stateRepository.save(mapper.map(stateDTO, State.class)), StateDTO.class);
 	}
 
 	/*
@@ -88,38 +122,28 @@ public class StateServiceImpl implements StateService {
 	 */
 	@Override
 	public void deleteState(Long id) {
-		// TODO Auto-generated method stub
 
+		// Validate and delete state.
+		stateRepository.delete(entityValidator.validateState(id));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ml.bootcode.profileapp.services.StateService#getCitiesByStateId(java.lang.
+	 * Long)
+	 */
 	@Override
-	public StateDTO mapObjectToDto(State state) {
+	public List<CityDTO> getCitiesByStateId(Long id) {
 
-		StateDTO stateDTO = new StateDTO();
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
 
-		stateDTO.setId(state.getId());
-		stateDTO.setName(state.getName());
-		stateDTO.setCities(state.getCities());
-		stateDTO.setCountry(state.getCountry());
+		// Validate state ID.
+		State state = entityValidator.validateState(id);
 
-		return stateDTO;
-	}
-
-	@Override
-	public void mapDtoToObject(StateDTO stateDTO, State state) {
-
-		state.setName(stateDTO.getName());
-		state.setCountry(stateDTO.getCountry());
-	}
-
-	@Override
-	public State validateState(Long id) {
-
-		Optional<State> stateOptional = stateRepository.findById(id);
-
-		if (!stateOptional.isPresent())
-			throw new RuntimeException("Requested resource not found");
-
-		return stateOptional.get();
+		return state.getCities().stream().map(city -> {
+			return mapper.map(city, CityDTO.class);
+		}).collect(Collectors.toList());
 	}
 }

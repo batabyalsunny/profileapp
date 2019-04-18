@@ -12,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 /**
  * @author sunny
  *
@@ -21,10 +23,11 @@ public class Company {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long ID;
+	private Long id;
 	private String name;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "company")
+	@JsonBackReference
 	private List<Employee> employees;
 
 	public Company() {
@@ -34,12 +37,12 @@ public class Company {
 		this.name = name;
 	}
 
-	public Long getID() {
-		return ID;
+	public Long getId() {
+		return id;
 	}
 
-	public void setID(Long ID) {
-		this.ID = ID;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getName() {
