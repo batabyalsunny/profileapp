@@ -40,7 +40,7 @@ public class AddressController {
 	}
 
 	@GetMapping("{id}")
-	public AddressDTO gettAddress(@PathVariable Long id) {
+	public AddressDTO getAddress(@PathVariable Long id) {
 		return addressService.getAddress(id);
 	}
 

@@ -5,6 +5,8 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 import ml.bootcode.profileapp.models.Address;
+import ml.bootcode.profileapp.models.Asset;
+import ml.bootcode.profileapp.models.AssetType;
 import ml.bootcode.profileapp.models.City;
 import ml.bootcode.profileapp.models.Company;
 import ml.bootcode.profileapp.models.Country;
@@ -12,6 +14,8 @@ import ml.bootcode.profileapp.models.Designation;
 import ml.bootcode.profileapp.models.Employee;
 import ml.bootcode.profileapp.models.State;
 import ml.bootcode.profileapp.repositories.AddressRepository;
+import ml.bootcode.profileapp.repositories.AssetRepository;
+import ml.bootcode.profileapp.repositories.AssetTypeRepository;
 import ml.bootcode.profileapp.repositories.CityRepository;
 import ml.bootcode.profileapp.repositories.CompanyRepository;
 import ml.bootcode.profileapp.repositories.CountryRepository;
@@ -29,6 +33,8 @@ public class EntityValidator {
 	CompanyRepository companyRepository;
 	DesignationRepository designationRepository;
 	EmployeeRepository employeeRepository;
+	AssetRepository assetRepository;
+	AssetTypeRepository assetTypeRepository;
 
 	/**
 	 * @param countryRepository
@@ -38,10 +44,12 @@ public class EntityValidator {
 	 * @param companyRepository
 	 * @param designationRepository
 	 * @param employeeRepository
+	 * @param assetTypeRepository
 	 */
 	public EntityValidator(CountryRepository countryRepository, StateRepository stateRepository,
 			CityRepository cityRepository, AddressRepository addressRepository, CompanyRepository companyRepository,
-			DesignationRepository designationRepository, EmployeeRepository employeeRepository) {
+			DesignationRepository designationRepository, EmployeeRepository employeeRepository,
+			AssetRepository assetRepository, AssetTypeRepository assetTypeRepository) {
 		this.countryRepository = countryRepository;
 		this.stateRepository = stateRepository;
 		this.cityRepository = cityRepository;
@@ -49,6 +57,8 @@ public class EntityValidator {
 		this.companyRepository = companyRepository;
 		this.designationRepository = designationRepository;
 		this.employeeRepository = employeeRepository;
+		this.assetRepository = assetRepository;
+		this.assetTypeRepository = assetTypeRepository;
 	}
 
 	public Country validateCountry(Long id) {
@@ -124,6 +134,28 @@ public class EntityValidator {
 		}
 
 		return employeeOptional.get();
+	}
+
+	public Asset validateAsset(Long id) {
+
+		Optional<Asset> assetOptional = assetRepository.findById(id);
+
+		if (!assetOptional.isPresent()) {
+			throw new RuntimeException("Requested asset not found.");
+		}
+
+		return assetOptional.get();
+	}
+
+	public AssetType validateAssetType(Long id) {
+
+		Optional<AssetType> assetTypeOptional = assetTypeRepository.findById(id);
+
+		if (!assetTypeOptional.isPresent()) {
+			throw new RuntimeException("Requested asset type not found.");
+		}
+
+		return assetTypeOptional.get();
 	}
 
 }
