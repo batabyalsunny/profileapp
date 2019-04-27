@@ -6,9 +6,17 @@ package ml.bootcode.profileapp.services.impl;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+
+import javax.servlet.ServletContext;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,6 +39,9 @@ public class AssetServiceImpl implements AssetService {
 	private EntityValidator entityValidator;
 	private ModelMapper mapper;
 
+	@Autowired
+	private ServletContext servletContext;
+
 	/**
 	 * @param assetRepository
 	 */
@@ -38,6 +49,26 @@ public class AssetServiceImpl implements AssetService {
 		this.assetRepository = assetRepository;
 		this.entityValidator = entityValidator;
 		this.mapper = mapper;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ml.bootcode.profileapp.services.AssetService#getAsset(java.lang.Long)
+	 */
+	@Override
+	public ResponseEntity<byte[]> getAsset(Long id) throws IOException {
+		// Validate the asset.
+		Asset asset = entityValidator.validateAsset(id);
+
+		HttpHeaders httpHeaders = new HttpHeaders();
+		InputStream inputStream = servletContext.getResourceAsStream(asset.getPath());
+
+		byte[] assetByte = org.apache.commons.io.IOUtils.toByteArray(inputStream);
+		httpHeaders.setCacheControl(CacheControl.noCache().getHeaderValue());
+
+		ResponseEntity<byte[]> responseEntity = new ResponseEntity<>(assetByte, httpHeaders, HttpStatus.OK);
+		return responseEntity;
 	}
 
 	/*

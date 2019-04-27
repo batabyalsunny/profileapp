@@ -5,6 +5,9 @@ package ml.bootcode.profileapp.controllers;
 
 import java.io.IOException;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +31,16 @@ public class AssetController {
 	 */
 	public AssetController(AssetService assetService) {
 		this.assetService = assetService;
+	}
+
+	@GetMapping("{id}")
+	public ResponseEntity<byte[]> getAsset(@PathVariable Long id) {
+		try {
+			return assetService.getAsset(id);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@PostMapping
