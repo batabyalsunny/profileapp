@@ -6,17 +6,14 @@ package ml.bootcode.profileapp.services.impl;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.CacheControl;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +24,7 @@ import ml.bootcode.profileapp.models.AssetType;
 import ml.bootcode.profileapp.repositories.AssetRepository;
 import ml.bootcode.profileapp.services.AssetService;
 import ml.bootcode.profileapp.util.EntityValidator;
+import ml.bootcode.profileapp.util.MultipartFileSender;
 
 /**
  * @author sunnyb
@@ -57,18 +55,33 @@ public class AssetServiceImpl implements AssetService {
 	 * @see ml.bootcode.profileapp.services.AssetService#getAsset(java.lang.Long)
 	 */
 	@Override
-	public ResponseEntity<byte[]> getAsset(Long id) throws IOException {
+	public void getAsset(Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// Validate the asset.
 		Asset asset = entityValidator.validateAsset(id);
 
-		HttpHeaders httpHeaders = new HttpHeaders();
-		InputStream inputStream = servletContext.getResourceAsStream(asset.getPath());
+		File file = new File(asset.getPath());
 
-		byte[] assetByte = org.apache.commons.io.IOUtils.toByteArray(inputStream);
-		httpHeaders.setCacheControl(CacheControl.noCache().getHeaderValue());
-
-		ResponseEntity<byte[]> responseEntity = new ResponseEntity<>(assetByte, httpHeaders, HttpStatus.OK);
-		return responseEntity;
+		MultipartFileSender.fromFile(file).with(request).with(response).serveResource();
+//
+//		if (!file.exists()) {
+//			throw new RuntimeException("File not found");
+//		}
+//
+//		HttpHeaders httpHeaders = new HttpHeaders();
+//		httpHeaders.setContentType(MediaType.IMAGE_JPEG);
+////		InputStream inputStream = servletContext.getResourceAsStream(file.getAbsolutePath());
+//
+//		InputStream inputStream = new FileInputStream(file);
+//
+////		if (null == inputStream) {
+////			throw new RuntimeException("File not found 2");
+////		}
+//
+//		byte[] assetByte = org.apache.commons.io.IOUtils.toByteArray(inputStream);
+//		httpHeaders.setCacheControl(CacheControl.noCache().getHeaderValue());
+//
+//		ResponseEntity<byte[]> responseEntity = new ResponseEntity<>(assetByte, httpHeaders, HttpStatus.OK);
+//		return responseEntity;
 	}
 
 	/*
