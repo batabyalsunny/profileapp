@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.FileNameMap;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -141,7 +143,8 @@ public class MultipartFileSender {
 				.ofInstant(lastModifiedObj.toInstant(), ZoneId.of(ZoneOffset.systemDefault().getId()))
 				.toEpochSecond(ZoneOffset.UTC);
 
-		String contentType = null;
+		FileNameMap fileNameMap = URLConnection.getFileNameMap();
+		String contentType = fileNameMap.getContentTypeFor(fileName);
 
 		if (extension.equalsIgnoreCase("mp4")) {
 			contentType = "video/mp4";

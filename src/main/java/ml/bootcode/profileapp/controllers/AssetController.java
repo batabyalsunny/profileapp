@@ -4,10 +4,12 @@
 package ml.bootcode.profileapp.controllers;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import ml.bootcode.profileapp.dto.AssetDTO;
 import ml.bootcode.profileapp.services.AssetService;
 
 /**
@@ -36,9 +39,26 @@ public class AssetController {
 	}
 
 	@GetMapping("{id}")
-	public void getAsset(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
+	public AssetDTO getAsset(@PathVariable Long id) {
+		return assetService.getAsset(id);
+	}
+
+	@GetMapping("{id}/render")
+	public ResponseEntity<byte[]> renderAsset(@PathVariable Long id) {
 		try {
-			assetService.getAsset(id, request, response);
+			return assetService.renderAsset(id);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	@GetMapping("{id}/stream")
+	public void streamAsset(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
+		try {
+			assetService.streamAsset(id, request, response);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -46,11 +66,13 @@ public class AssetController {
 	}
 
 	@PostMapping
-	public void uploadAsset(@RequestParam("files") MultipartFile[] files, @RequestParam("type") Long assetTypeId) {
+	public List<AssetDTO> uploadAsset(@RequestParam("files") MultipartFile[] files,
+			@RequestParam("type") Long assetTypeId) {
 		try {
-			assetService.addAsset(files, assetTypeId);
+			return assetService.addAssets(files, assetTypeId);
 		} catch (IOException ioEx) {
-
+			ioEx.printStackTrace();
 		}
+		return null;
 	}
 }

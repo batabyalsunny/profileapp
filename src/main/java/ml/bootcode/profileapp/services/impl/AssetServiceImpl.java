@@ -4,16 +4,24 @@
 package ml.bootcode.profileapp.services.impl;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,9 +45,6 @@ public class AssetServiceImpl implements AssetService {
 	private EntityValidator entityValidator;
 	private ModelMapper mapper;
 
-	@Autowired
-	private ServletContext servletContext;
-
 	/**
 	 * @param assetRepository
 	 */
@@ -55,44 +60,73 @@ public class AssetServiceImpl implements AssetService {
 	 * @see ml.bootcode.profileapp.services.AssetService#getAsset(java.lang.Long)
 	 */
 	@Override
-	public void getAsset(Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public AssetDTO getAsset(Long id) {
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+		return mapper.map(entityValidator.validateAsset(id), AssetDTO.class);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ml.bootcode.profileapp.services.AssetService#renderAsset(java.lang.Long)
+	 */
+	@Override
+	public ResponseEntity<byte[]> renderAsset(Long id) throws IOException {
+
 		// Validate the asset.
 		Asset asset = entityValidator.validateAsset(id);
 
 		File file = new File(asset.getPath());
 
+		if (!file.exists()) {
+			throw new RuntimeException("File not found");
+		}
+
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setContentType(MediaType.valueOf(asset.getMimeType()));
+
+		InputStream inputStream = new FileInputStream(file);
+
+		byte[] assetByte = IOUtils.toByteArray(inputStream);
+		httpHeaders.setCacheControl(CacheControl.noCache().getHeaderValue());
+
+		ResponseEntity<byte[]> responseEntity = new ResponseEntity<>(assetByte, httpHeaders, HttpStatus.OK);
+		return responseEntity;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ml.bootcode.profileapp.services.AssetService#streamAsset(java.lang.Long,
+	 * javax.servlet.http.HttpServletRequest,
+	 * javax.servlet.http.HttpServletResponse)
+	 */
+	@Override
+	public void streamAsset(Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		// Validate the asset.
+		Asset asset = entityValidator.validateAsset(id);
+
+		File file = new File(asset.getPath());
+
+		if (!file.exists()) {
+			throw new RuntimeException("File not found");
+		}
+
 		MultipartFileSender.fromFile(file).with(request).with(response).serveResource();
-//
-//		if (!file.exists()) {
-//			throw new RuntimeException("File not found");
-//		}
-//
-//		HttpHeaders httpHeaders = new HttpHeaders();
-//		httpHeaders.setContentType(MediaType.IMAGE_JPEG);
-////		InputStream inputStream = servletContext.getResourceAsStream(file.getAbsolutePath());
-//
-//		InputStream inputStream = new FileInputStream(file);
-//
-////		if (null == inputStream) {
-////			throw new RuntimeException("File not found 2");
-////		}
-//
-//		byte[] assetByte = org.apache.commons.io.IOUtils.toByteArray(inputStream);
-//		httpHeaders.setCacheControl(CacheControl.noCache().getHeaderValue());
-//
-//		ResponseEntity<byte[]> responseEntity = new ResponseEntity<>(assetByte, httpHeaders, HttpStatus.OK);
-//		return responseEntity;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * ml.bootcode.profileapp.services.AssetService#uploadAsset(org.springframework.
-	 * web.multipart.MultipartFile)
+	 * ml.bootcode.profileapp.services.AssetService#addAssets(org.springframework.
+	 * web.multipart.MultipartFile[], java.lang.Long)
 	 */
 	@Override
-	public void addAsset(MultipartFile[] files, Long assetTypeId) throws IOException {
+	public List<AssetDTO> addAssets(MultipartFile[] files, Long assetTypeId) throws IOException {
+
+		List<AssetDTO> assetDTOs = new ArrayList<>();
 
 		for (MultipartFile file : files) {
 
@@ -119,9 +153,11 @@ public class AssetServiceImpl implements AssetService {
 			assetDTO.setAssetType(mapper.map(assetType, AssetTypeDTO.class));
 
 			// Save asset record.
-			assetRepository.save(mapper.map(assetDTO, Asset.class));
+			assetDTOs.add(mapper.map(assetRepository.save(mapper.map(assetDTO, Asset.class)), AssetDTO.class));
 
 		}
+
+		return assetDTOs;
 	}
 
 }
