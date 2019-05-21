@@ -10,9 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,9 +41,35 @@ public class AssetController {
 		this.assetService = assetService;
 	}
 
+	@GetMapping
+	public List<AssetDTO> getAssets() {
+		return assetService.getAssets();
+	}
+
 	@GetMapping("{id}")
 	public AssetDTO getAsset(@PathVariable Long id) {
 		return assetService.getAsset(id);
+	}
+
+	@PostMapping
+	public List<AssetDTO> uploadAsset(@RequestParam("files") MultipartFile[] files,
+			@RequestParam("type") Long assetTypeId) {
+		try {
+			return assetService.addAssets(files, assetTypeId);
+		} catch (IOException ioEx) {
+			ioEx.printStackTrace();
+		}
+		return null;
+	}
+
+	@PutMapping("{id}")
+	public AssetDTO updateAsset(@PathVariable Long id, @RequestBody AssetDTO assetDto) {
+		return assetService.updateAsset(id, assetDto);
+	}
+
+	@DeleteMapping("{id}")
+	public void deleteAsset(@PathVariable Long id) {
+		assetService.deleteAsset(id);
 	}
 
 	@GetMapping("{id}/render")
@@ -63,16 +92,5 @@ public class AssetController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-
-	@PostMapping
-	public List<AssetDTO> uploadAsset(@RequestParam("files") MultipartFile[] files,
-			@RequestParam("type") Long assetTypeId) {
-		try {
-			return assetService.addAssets(files, assetTypeId);
-		} catch (IOException ioEx) {
-			ioEx.printStackTrace();
-		}
-		return null;
 	}
 }

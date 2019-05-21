@@ -28,7 +28,7 @@ public interface AssetService {
 
 	List<AssetDTO> addAssets(MultipartFile[] files, Long assetTypeId) throws IOException;
 
-	AssetDTO updateAsset(Long id);
+	AssetDTO updateAsset(Long id, AssetDTO assetDto);
 
 	void deleteAsset(Long id);
 

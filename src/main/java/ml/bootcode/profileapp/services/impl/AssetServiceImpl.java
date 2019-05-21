@@ -128,9 +128,16 @@ public class AssetServiceImpl implements AssetService {
 	 * @see ml.bootcode.profileapp.services.AssetService#updateAsset(java.lang.Long)
 	 */
 	@Override
-	public AssetDTO updateAsset(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+	public AssetDTO updateAsset(Long id, AssetDTO assetDto) {
+
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+
+		Asset asset = entityValidator.validateAsset(id);
+
+		asset.setAssetName(assetDto.getAssetName());
+		asset.setAssetType(entityValidator.validateAssetType(assetDto.getAssetType().getId()));
+
+		return mapper.map(assetRepository.save(asset), AssetDTO.class);
 	}
 
 	/*
