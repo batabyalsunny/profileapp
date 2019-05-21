@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -57,12 +58,89 @@ public class AssetServiceImpl implements AssetService {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see ml.bootcode.profileapp.services.AssetService#getAssets()
+	 */
+	@Override
+	public List<AssetDTO> getAssets() {
+		return assetRepository.findAll().stream().map(asset -> {
+			return mapper.map(asset, AssetDTO.class);
+		}).collect(Collectors.toList());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see ml.bootcode.profileapp.services.AssetService#getAsset(java.lang.Long)
 	 */
 	@Override
 	public AssetDTO getAsset(Long id) {
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
 		return mapper.map(entityValidator.validateAsset(id), AssetDTO.class);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ml.bootcode.profileapp.services.AssetService#addAssets(org.springframework.
+	 * web.multipart.MultipartFile[], java.lang.Long)
+	 */
+	@Override
+	public List<AssetDTO> addAssets(MultipartFile[] files, Long assetTypeId) throws IOException {
+
+		List<AssetDTO> assetDTOs = new ArrayList<>();
+
+		for (MultipartFile file : files) {
+
+			// Create a blank new file in assets directory.
+			File newFile = new File(AssetService.ASSET_LOCATION + file.getOriginalFilename());
+			newFile.createNewFile();
+
+			// Stream the file into new file.
+			FileOutputStream fileOutputStream = new FileOutputStream(newFile);
+			fileOutputStream.write(file.getBytes());
+			fileOutputStream.close();
+
+			// Create the Dto for assets record.
+			AssetDTO assetDTO = new AssetDTO();
+			assetDTO.setRealName(file.getOriginalFilename());
+			assetDTO.setAssetName(file.getOriginalFilename());
+			assetDTO.setMimeType(file.getContentType());
+			assetDTO.setPath(AssetService.ASSET_LOCATION + file.getOriginalFilename());
+
+			mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+
+			AssetType assetType = entityValidator.validateAssetType(assetTypeId);
+
+			assetDTO.setAssetType(mapper.map(assetType, AssetTypeDTO.class));
+
+			// Save asset record.
+			assetDTOs.add(mapper.map(assetRepository.save(mapper.map(assetDTO, Asset.class)), AssetDTO.class));
+
+		}
+
+		return assetDTOs;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ml.bootcode.profileapp.services.AssetService#updateAsset(java.lang.Long)
+	 */
+	@Override
+	public AssetDTO updateAsset(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ml.bootcode.profileapp.services.AssetService#deleteAsset()
+	 */
+	@Override
+	public void deleteAsset(Long id) {
+		assetRepository.delete(entityValidator.validateAsset(id));
 	}
 
 	/*
@@ -114,50 +192,6 @@ public class AssetServiceImpl implements AssetService {
 		}
 
 		MultipartFileSender.fromFile(file).with(request).with(response).serveResource();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * ml.bootcode.profileapp.services.AssetService#addAssets(org.springframework.
-	 * web.multipart.MultipartFile[], java.lang.Long)
-	 */
-	@Override
-	public List<AssetDTO> addAssets(MultipartFile[] files, Long assetTypeId) throws IOException {
-
-		List<AssetDTO> assetDTOs = new ArrayList<>();
-
-		for (MultipartFile file : files) {
-
-			// Create a blank new file in assets directory.
-			File newFile = new File(AssetService.ASSET_LOCATION + file.getOriginalFilename());
-			newFile.createNewFile();
-
-			// Stream the file into new file.
-			FileOutputStream fileOutputStream = new FileOutputStream(newFile);
-			fileOutputStream.write(file.getBytes());
-			fileOutputStream.close();
-
-			// Create the Dto for assets record.
-			AssetDTO assetDTO = new AssetDTO();
-			assetDTO.setRealName(file.getOriginalFilename());
-			assetDTO.setAssetName(file.getOriginalFilename());
-			assetDTO.setMimeType(file.getContentType());
-			assetDTO.setPath(AssetService.ASSET_LOCATION + file.getOriginalFilename());
-
-			mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
-
-			AssetType assetType = entityValidator.validateAssetType(assetTypeId);
-
-			assetDTO.setAssetType(mapper.map(assetType, AssetTypeDTO.class));
-
-			// Save asset record.
-			assetDTOs.add(mapper.map(assetRepository.save(mapper.map(assetDTO, Asset.class)), AssetDTO.class));
-
-		}
-
-		return assetDTOs;
 	}
 
 }

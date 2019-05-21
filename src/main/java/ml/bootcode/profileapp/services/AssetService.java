@@ -22,9 +22,15 @@ public interface AssetService {
 
 	public static final String ASSET_LOCATION = System.getProperty("user.home") + "/Downloads/uploads/";
 
+	List<AssetDTO> getAssets();
+
 	AssetDTO getAsset(Long id);
 
 	List<AssetDTO> addAssets(MultipartFile[] files, Long assetTypeId) throws IOException;
+
+	AssetDTO updateAsset(Long id);
+
+	void deleteAsset(Long id);
 
 	ResponseEntity<byte[]> renderAsset(Long id) throws IOException;
 

@@ -3,7 +3,7 @@
  */
 package ml.bootcode.profileapp.repositories;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import ml.bootcode.profileapp.models.Asset;
 
@@ -11,6 +11,6 @@ import ml.bootcode.profileapp.models.Asset;
  * @author sunnyb
  *
  */
-public interface AssetRepository extends CrudRepository<Asset, Long> {
+public interface AssetRepository extends JpaRepository<Asset, Long> {
 
 }
