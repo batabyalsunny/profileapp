@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package ml.bootcode.profileapp.bootstrap;
 
@@ -8,6 +8,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import ml.bootcode.profileapp.models.Address;
+import ml.bootcode.profileapp.models.AssetType;
 import ml.bootcode.profileapp.models.City;
 import ml.bootcode.profileapp.models.Company;
 import ml.bootcode.profileapp.models.Country;
@@ -15,6 +16,8 @@ import ml.bootcode.profileapp.models.Designation;
 import ml.bootcode.profileapp.models.Employee;
 import ml.bootcode.profileapp.models.State;
 import ml.bootcode.profileapp.repositories.AddressRepository;
+import ml.bootcode.profileapp.repositories.AssetRepository;
+import ml.bootcode.profileapp.repositories.AssetTypeRepository;
 import ml.bootcode.profileapp.repositories.CityRepository;
 import ml.bootcode.profileapp.repositories.CompanyRepository;
 import ml.bootcode.profileapp.repositories.CountryRepository;
@@ -36,8 +39,24 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 	CompanyRepository companyRepository;
 	DesignationRepository designationRepository;
 	EmployeeRepository employeeRepository;
+	AssetTypeRepository assetTypeRepository;
+	AssetRepository assetRepository;
 
-	public DevBootstrap(CountryRepository countryRepository, StateRepository stateRepository, CityRepository cityRepository, AddressRepository addressRepository, CompanyRepository companyRepository, DesignationRepository designationRepository, EmployeeRepository employeeRepository) {
+	/**
+	 * @param countryRepository
+	 * @param stateRepository
+	 * @param cityRepository
+	 * @param addressRepository
+	 * @param companyRepository
+	 * @param designationRepository
+	 * @param employeeRepository
+	 * @param assetTypeRepository
+	 * @param assetRepository
+	 */
+	public DevBootstrap(CountryRepository countryRepository, StateRepository stateRepository,
+			CityRepository cityRepository, AddressRepository addressRepository, CompanyRepository companyRepository,
+			DesignationRepository designationRepository, EmployeeRepository employeeRepository,
+			AssetTypeRepository assetTypeRepository, AssetRepository assetRepository) {
 		this.countryRepository = countryRepository;
 		this.stateRepository = stateRepository;
 		this.cityRepository = cityRepository;
@@ -45,14 +64,19 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		this.companyRepository = companyRepository;
 		this.designationRepository = designationRepository;
 		this.employeeRepository = employeeRepository;
+		this.assetTypeRepository = assetTypeRepository;
+		this.assetRepository = assetRepository;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.springframework.context.ApplicationListener#onApplicationEvent(org.
+	 * springframework.context.ApplicationEvent)
 	 */
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
-//		initData();
+		initData();
 	}
 
 	private void initData() {
@@ -128,5 +152,15 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		employeeRepository.save(sunny);
 		employeeRepository.save(ashish);
 		employeeRepository.save(subhankar);
+
+		// Create asset types.
+		AssetType profilePic = new AssetType();
+		profilePic.setType("Profile Picture");
+
+		AssetType document = new AssetType();
+		document.setType("Document");
+
+		assetTypeRepository.save(profilePic);
+		assetTypeRepository.save(document);
 	}
 }
