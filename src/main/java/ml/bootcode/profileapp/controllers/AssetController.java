@@ -4,6 +4,7 @@
 package ml.bootcode.profileapp.controllers;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -92,5 +93,10 @@ public class AssetController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	@GetMapping("{id}/download")
+	public long downloadAsset(@PathVariable Long id) throws IOException, URISyntaxException {
+		return assetService.downloadAsset(id);
 	}
 }
