@@ -4,7 +4,6 @@
 package ml.bootcode.profileapp.services;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,5 +36,5 @@ public interface AssetService {
 
 	void streamAsset(Long id, HttpServletRequest request, HttpServletResponse response) throws IOException;
 
-	long downloadAsset(Long id) throws IOException, URISyntaxException;
+	void downloadAsset(Long id, HttpServletRequest request, HttpServletResponse response);
 }

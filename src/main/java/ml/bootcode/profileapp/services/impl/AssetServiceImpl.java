@@ -8,7 +8,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,7 +34,7 @@ import ml.bootcode.profileapp.repositories.AssetRepository;
 import ml.bootcode.profileapp.services.AssetService;
 import ml.bootcode.profileapp.util.EntityValidator;
 import ml.bootcode.profileapp.util.MultipartFileSender;
-import ml.bootcode.profileapp.util.ResumableDownload;
+import ml.bootcode.profileapp.util.ResumableFileDownloader;
 
 /**
  * @author sunnyb
@@ -204,8 +203,34 @@ public class AssetServiceImpl implements AssetService {
 	}
 
 	@Override
-	public long downloadAsset(Long id) throws IOException, URISyntaxException {
-		return ResumableDownload.downloadFileWithResume("http://localhost:8080/api/v1/assets/" + id + "/render",
-				"file-" + id + ".jpeg");
+	public void downloadAsset(Long id, HttpServletRequest request, HttpServletResponse response) {
+
+		// Validate the asset.
+		Asset asset = entityValidator.validateAsset(id);
+
+//		// Get the file.
+//		Path file = Paths.get(asset.getPath());
+//
+//		if (!Files.exists(file)) {
+//			throw new RuntimeException("File not found");
+//		}
+//
+//		// Set response content type and content disposition.
+//		response.setContentType(asset.getMimeType());
+//		response.addHeader("Content-Disposition", "attachment; filename=" + asset.getRealName());
+//
+//		try {
+//			Files.copy(file, response.getOutputStream());
+//			response.getOutputStream().flush();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+
+		try {
+			ResumableFileDownloader.fromPath(asset.getPath()).with(response).download();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
