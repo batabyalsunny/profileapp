@@ -157,7 +157,7 @@ public class MultipartFileSender {
 
 		// If-None-Match header then response should contain "*" or "ETag". If so then
 		// return 304.
-		String ifNoneMatch = request.getHeader("If-None-Match");
+		String ifNoneMatch = request.getHeader(HttpHeaders.IF_NONE_MATCH);
 		if (null != ifNoneMatch && HttpUtils.matches(ifNoneMatch, fileName)) {
 			response.setHeader("ETag", fileName); // Required in 304.
 			response.sendError(HttpServletResponse.SC_NOT_MODIFIED);
