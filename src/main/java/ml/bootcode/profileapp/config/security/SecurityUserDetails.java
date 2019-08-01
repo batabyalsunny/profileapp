@@ -4,15 +4,13 @@
 package ml.bootcode.profileapp.config.security;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import ml.bootcode.profileapp.models.Authority;
-import ml.bootcode.profileapp.models.User;
+import ml.bootcode.profileapp.models.Employee;
 
 /**
  * @author sunnyb
@@ -25,35 +23,33 @@ public class SecurityUserDetails implements UserDetails {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private User user;
+	private Employee user;
 
 	/**
 	 * @param user
 	 */
-	public SecurityUserDetails(User user) {
+	public SecurityUserDetails(Employee user) {
 		this.user = user;
 	}
 
 	/**
 	 * @return the user
 	 */
-	public User getUser() {
+	public Employee getUser() {
 		return user;
 	}
 
 	/**
 	 * @param user the user to set
 	 */
-	public void setUser(User user) {
+	public void setUser(Employee user) {
 		this.user = user;
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return user.getRoles().stream()
-				.map(role -> role.getAuthorities().stream().map(Authority::getName).collect(Collectors.toList()))
-				.collect(Collectors.toList()).stream().distinct().flatMap(List::stream)
-				.map(authority -> new SimpleGrantedAuthority(authority)).collect(Collectors.toList());
+		return user.getDesignation().getAuthorities().stream()
+				.map(authority -> new SimpleGrantedAuthority(authority.getName())).collect(Collectors.toList());
 	}
 
 	@Override
@@ -83,7 +79,7 @@ public class SecurityUserDetails implements UserDetails {
 
 	@Override
 	public boolean isEnabled() {
-		return true;
+		return user.isActive();
 	}
 
 }

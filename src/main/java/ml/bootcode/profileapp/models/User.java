@@ -5,7 +5,6 @@ package ml.bootcode.profileapp.models;
 
 import java.util.List;
 
-import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,7 +15,7 @@ import javax.persistence.ManyToMany;
  * @author sunnybatabyal
  *
  */
-@Entity
+//@Entity
 public class User {
 
 	@Id

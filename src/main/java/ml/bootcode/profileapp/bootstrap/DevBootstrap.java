@@ -18,9 +18,7 @@ import ml.bootcode.profileapp.models.Company;
 import ml.bootcode.profileapp.models.Country;
 import ml.bootcode.profileapp.models.Designation;
 import ml.bootcode.profileapp.models.Employee;
-import ml.bootcode.profileapp.models.Role;
 import ml.bootcode.profileapp.models.State;
-import ml.bootcode.profileapp.models.User;
 import ml.bootcode.profileapp.repositories.AddressRepository;
 import ml.bootcode.profileapp.repositories.AssetRepository;
 import ml.bootcode.profileapp.repositories.AssetTypeRepository;
@@ -30,9 +28,7 @@ import ml.bootcode.profileapp.repositories.CompanyRepository;
 import ml.bootcode.profileapp.repositories.CountryRepository;
 import ml.bootcode.profileapp.repositories.DesignationRepository;
 import ml.bootcode.profileapp.repositories.EmployeeRepository;
-import ml.bootcode.profileapp.repositories.RoleRepository;
 import ml.bootcode.profileapp.repositories.StateRepository;
-import ml.bootcode.profileapp.repositories.UserRepository;
 
 /**
  * @author sunny
@@ -51,8 +47,6 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 	private AssetTypeRepository assetTypeRepository;
 	private AssetRepository assetRepository;
 	private AuthorityRepository authorityRepository;
-	private RoleRepository roleRepository;
-	private UserRepository userRepository;
 	private PasswordEncoder passwordEncoder;
 
 	/**
@@ -66,16 +60,13 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 	 * @param assetTypeRepository
 	 * @param assetRepository
 	 * @param authorityRepository
-	 * @param roleRepository
-	 * @param userRepository
 	 * @param passwordEncoder
 	 */
 	public DevBootstrap(CountryRepository countryRepository, StateRepository stateRepository,
 			CityRepository cityRepository, AddressRepository addressRepository, CompanyRepository companyRepository,
 			DesignationRepository designationRepository, EmployeeRepository employeeRepository,
 			AssetTypeRepository assetTypeRepository, AssetRepository assetRepository,
-			AuthorityRepository authorityRepository, RoleRepository roleRepository, UserRepository userRepository,
-			PasswordEncoder passwordEncoder) {
+			AuthorityRepository authorityRepository, PasswordEncoder passwordEncoder) {
 		this.countryRepository = countryRepository;
 		this.stateRepository = stateRepository;
 		this.cityRepository = cityRepository;
@@ -86,8 +77,6 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		this.assetTypeRepository = assetTypeRepository;
 		this.assetRepository = assetRepository;
 		this.authorityRepository = authorityRepository;
-		this.roleRepository = roleRepository;
-		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 	}
 
@@ -118,42 +107,6 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		authorityRepository.save(downloadAuthority);
 		authorityRepository.save(editAuthority);
 		authorityRepository.save(uploadAuthority);
-
-		// Create roles.
-		Role adminRole = new Role();
-		adminRole.setName("ADMIN");
-		adminRole.setAuthorities(Arrays.asList(viewAuthority, downloadAuthority, editAuthority, uploadAuthority));
-
-		Role userRole = new Role();
-		userRole.setName("USER");
-		userRole.setAuthorities(Arrays.asList(viewAuthority));
-
-		Role artistRole = new Role();
-		artistRole.setName("ARTIST");
-		artistRole.setAuthorities(Arrays.asList(viewAuthority, uploadAuthority));
-
-		Role customerRole = new Role();
-		customerRole.setName("CUSTOMER");
-		customerRole.setAuthorities(Arrays.asList(viewAuthority, downloadAuthority));
-
-		adminRole = roleRepository.save(adminRole);
-		userRole = roleRepository.save(userRole);
-		artistRole = roleRepository.save(artistRole);
-		customerRole = roleRepository.save(customerRole);
-
-		// Create users.
-		User adminUser = new User();
-		adminUser.setEmail("sunny");
-		adminUser.setPassword(passwordEncoder.encode("sunny"));
-		adminUser.setRoles(Arrays.asList(adminRole));
-
-		User testUser = new User();
-		testUser.setEmail("test");
-		testUser.setPassword(passwordEncoder.encode("test"));
-		testUser.setRoles(Arrays.asList(artistRole, customerRole));
-
-		adminUser = userRepository.save(adminUser);
-		testUser = userRepository.save(testUser);
 
 		// Create country.
 		Country ind = new Country("India");
@@ -202,7 +155,10 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 
 		// Create Designations.
 		Designation se = new Designation("Software Engineer");
+		se.setAuthorities(Arrays.asList(viewAuthority, uploadAuthority));
+
 		Designation sa = new Designation("Senior Associate");
+		sa.setAuthorities(Arrays.asList(viewAuthority, uploadAuthority, editAuthority, downloadAuthority));
 
 		designationRepository.save(se);
 		designationRepository.save(sa);

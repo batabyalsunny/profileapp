@@ -11,7 +11,6 @@ import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 import ml.bootcode.profileapp.config.security.JwtTokenProvider;
 import ml.bootcode.profileapp.dto.LoginRequestDto;
@@ -24,7 +23,7 @@ import ml.bootcode.profileapp.repositories.UserRepository;
  * @author sunnybatabyal
  *
  */
-@Service
+//@Service
 public class UserService {
 
 	private UserRepository userRepository;

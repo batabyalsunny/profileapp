@@ -27,7 +27,7 @@ public class Authority {
 
 	@ManyToMany(mappedBy = "authorities")
 	@JsonIgnore
-	private List<Role> roles;
+	private List<Designation> designations;
 
 	/**
 	 * @return the id
@@ -58,16 +58,16 @@ public class Authority {
 	}
 
 	/**
-	 * @return the roles
+	 * @return the designations
 	 */
-	public List<Role> getRoles() {
-		return roles;
+	public List<Designation> getDesignations() {
+		return designations;
 	}
 
 	/**
-	 * @param roles the roles to set
+	 * @param designations the designations to set
 	 */
-	public void setRoles(List<Role> roles) {
-		this.roles = roles;
+	public void setDesignations(List<Designation> designations) {
+		this.designations = designations;
 	}
 }

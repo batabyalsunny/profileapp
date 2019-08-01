@@ -11,33 +11,32 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ml.bootcode.profileapp.dto.LoginRequestDto;
 import ml.bootcode.profileapp.dto.LoginResponseDto;
-import ml.bootcode.profileapp.dto.UserDto;
-import ml.bootcode.profileapp.services.impl.UserService;
+import ml.bootcode.profileapp.services.AuthService;
 
 /**
  * @author sunnyb
  *
  */
 @RestController
-@RequestMapping("auth")
+@RequestMapping("api/v1/auth")
 public class AuthController {
 
-	private UserService userService;
+	private AuthService authService;
 
 	/**
-	 * @param userService
+	 * @param authService
 	 */
-	public AuthController(UserService userService) {
-		this.userService = userService;
+	public AuthController(AuthService authService) {
+		this.authService = authService;
 	}
 
 	@PostMapping("login")
 	public LoginResponseDto login(@RequestBody LoginRequestDto loginRequestDto) throws AuthenticationException {
-		return userService.login(loginRequestDto);
+		return authService.login(loginRequestDto);
 	}
 
-	@PostMapping("register")
-	public UserDto register(@RequestBody UserDto userDto) {
-		return userService.addUser(userDto);
-	}
+//	@PostMapping("register")
+//	public UserDto register(@RequestBody UserDto userDto) {
+//		return userService.addUser(userDto);
+//	}
 }

@@ -25,6 +25,8 @@ public class Employee {
 	private String lastName;
 	private String email;
 	private String phoneNumber;
+	private String password;
+	private boolean active;
 
 	@ManyToOne(targetEntity = Address.class)
 	private Address address;
@@ -109,5 +111,33 @@ public class Employee {
 
 	public void setDesignation(Designation designation) {
 		this.designation = designation;
+	}
+
+	/**
+	 * @return the password
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	/**
+	 * @param password the password to set
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	/**
+	 * @return the active
+	 */
+	public boolean isActive() {
+		return active;
+	}
+
+	/**
+	 * @param active the active to set
+	 */
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 }

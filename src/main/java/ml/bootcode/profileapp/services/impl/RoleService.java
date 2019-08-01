@@ -6,8 +6,6 @@ package ml.bootcode.profileapp.services.impl;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.stereotype.Service;
-
 import ml.bootcode.profileapp.models.Role;
 import ml.bootcode.profileapp.repositories.RoleRepository;
 
@@ -15,7 +13,7 @@ import ml.bootcode.profileapp.repositories.RoleRepository;
  * @author sunnybatabyal
  *
  */
-@Service
+//@Service
 public class RoleService {
 
 	private RoleRepository roleRepository;

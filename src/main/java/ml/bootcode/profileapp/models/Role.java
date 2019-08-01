@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * @author sunnybatabyal
  *
  */
-@Entity
+//@Entity
 public class Role {
 
 	@Id
@@ -28,7 +28,7 @@ public class Role {
 
 	@ManyToMany(mappedBy = "roles")
 	@JsonIgnore
-	private List<User> users;
+	private List<Employee> employees;
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Authority> authorities;
@@ -62,17 +62,17 @@ public class Role {
 	}
 
 	/**
-	 * @return the users
+	 * @return the employees
 	 */
-	public List<User> getUsers() {
-		return users;
+	public List<Employee> getEmployees() {
+		return employees;
 	}
 
 	/**
-	 * @param users the users to set
+	 * @param employees the employees to set
 	 */
-	public void setUsers(List<User> users) {
-		this.users = users;
+	public void setEmployees(List<Employee> employees) {
+		this.employees = employees;
 	}
 
 	/**

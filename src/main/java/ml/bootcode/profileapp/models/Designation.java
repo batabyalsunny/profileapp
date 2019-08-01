@@ -4,9 +4,11 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -22,6 +24,9 @@ public class Designation {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "designation")
 	@JsonBackReference
 	private List<Employee> employees;
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	private List<Authority> authorities;
 
 	public Designation() {
 	}
@@ -52,5 +57,19 @@ public class Designation {
 
 	public void setEmployees(List<Employee> employees) {
 		this.employees = employees;
+	}
+
+	/**
+	 * @return the authorities
+	 */
+	public List<Authority> getAuthorities() {
+		return authorities;
+	}
+
+	/**
+	 * @param authorities the authorities to set
+	 */
+	public void setAuthorities(List<Authority> authorities) {
+		this.authorities = authorities;
 	}
 }

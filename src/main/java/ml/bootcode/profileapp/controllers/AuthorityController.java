@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ml.bootcode.profileapp.models.Authority;
-import ml.bootcode.profileapp.services.impl.AuthorityService;
+import ml.bootcode.profileapp.services.AuthorityService;
 
 /**
  * @author sunnyb
  *
  */
 @RestController
-@RequestMapping("authorities")
+@RequestMapping("api/v1/authorities")
 public class AuthorityController {
 
 	private AuthorityService authorityService;

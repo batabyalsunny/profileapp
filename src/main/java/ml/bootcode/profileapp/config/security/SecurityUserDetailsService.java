@@ -11,8 +11,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import ml.bootcode.profileapp.models.User;
-import ml.bootcode.profileapp.repositories.UserRepository;
+import ml.bootcode.profileapp.models.Employee;
+import ml.bootcode.profileapp.repositories.EmployeeRepository;
 
 /**
  * @author sunnyb
@@ -21,24 +21,25 @@ import ml.bootcode.profileapp.repositories.UserRepository;
 @Component
 public class SecurityUserDetailsService implements UserDetailsService {
 
-	private UserRepository userRepository;
+	private EmployeeRepository employeeRepository;
 
 	/**
 	 * @param userRepository
+	 * @param employeeRepository
 	 */
-	public SecurityUserDetailsService(UserRepository userRepository) {
-		this.userRepository = userRepository;
+	public SecurityUserDetailsService(EmployeeRepository employeeRepository) {
+		this.employeeRepository = employeeRepository;
 	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<User> userOptional = userRepository.findByEmail(username);
+		Optional<Employee> employeeOptional = employeeRepository.findByEmail(username);
 
-		if (!userOptional.isPresent()) {
+		if (!employeeOptional.isPresent()) {
 			throw new BadCredentialsException("Bad credentials");
 		}
 
-		return new SecurityUserDetails(userOptional.get());
+		return new SecurityUserDetails(employeeOptional.get());
 	}
 
 }
