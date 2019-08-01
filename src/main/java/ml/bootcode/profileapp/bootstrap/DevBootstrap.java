@@ -3,27 +3,36 @@
  */
 package ml.bootcode.profileapp.bootstrap;
 
+import java.util.Arrays;
+
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import ml.bootcode.profileapp.models.Address;
 import ml.bootcode.profileapp.models.AssetType;
+import ml.bootcode.profileapp.models.Authority;
 import ml.bootcode.profileapp.models.City;
 import ml.bootcode.profileapp.models.Company;
 import ml.bootcode.profileapp.models.Country;
 import ml.bootcode.profileapp.models.Designation;
 import ml.bootcode.profileapp.models.Employee;
+import ml.bootcode.profileapp.models.Role;
 import ml.bootcode.profileapp.models.State;
+import ml.bootcode.profileapp.models.User;
 import ml.bootcode.profileapp.repositories.AddressRepository;
 import ml.bootcode.profileapp.repositories.AssetRepository;
 import ml.bootcode.profileapp.repositories.AssetTypeRepository;
+import ml.bootcode.profileapp.repositories.AuthorityRepository;
 import ml.bootcode.profileapp.repositories.CityRepository;
 import ml.bootcode.profileapp.repositories.CompanyRepository;
 import ml.bootcode.profileapp.repositories.CountryRepository;
 import ml.bootcode.profileapp.repositories.DesignationRepository;
 import ml.bootcode.profileapp.repositories.EmployeeRepository;
+import ml.bootcode.profileapp.repositories.RoleRepository;
 import ml.bootcode.profileapp.repositories.StateRepository;
+import ml.bootcode.profileapp.repositories.UserRepository;
 
 /**
  * @author sunny
@@ -32,15 +41,19 @@ import ml.bootcode.profileapp.repositories.StateRepository;
 @Component
 public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
-	CountryRepository countryRepository;
-	StateRepository stateRepository;
-	CityRepository cityRepository;
-	AddressRepository addressRepository;
-	CompanyRepository companyRepository;
-	DesignationRepository designationRepository;
-	EmployeeRepository employeeRepository;
-	AssetTypeRepository assetTypeRepository;
-	AssetRepository assetRepository;
+	private CountryRepository countryRepository;
+	private StateRepository stateRepository;
+	private CityRepository cityRepository;
+	private AddressRepository addressRepository;
+	private CompanyRepository companyRepository;
+	private DesignationRepository designationRepository;
+	private EmployeeRepository employeeRepository;
+	private AssetTypeRepository assetTypeRepository;
+	private AssetRepository assetRepository;
+	private AuthorityRepository authorityRepository;
+	private RoleRepository roleRepository;
+	private UserRepository userRepository;
+	private PasswordEncoder passwordEncoder;
 
 	/**
 	 * @param countryRepository
@@ -52,11 +65,17 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 	 * @param employeeRepository
 	 * @param assetTypeRepository
 	 * @param assetRepository
+	 * @param authorityRepository
+	 * @param roleRepository
+	 * @param userRepository
+	 * @param passwordEncoder
 	 */
 	public DevBootstrap(CountryRepository countryRepository, StateRepository stateRepository,
 			CityRepository cityRepository, AddressRepository addressRepository, CompanyRepository companyRepository,
 			DesignationRepository designationRepository, EmployeeRepository employeeRepository,
-			AssetTypeRepository assetTypeRepository, AssetRepository assetRepository) {
+			AssetTypeRepository assetTypeRepository, AssetRepository assetRepository,
+			AuthorityRepository authorityRepository, RoleRepository roleRepository, UserRepository userRepository,
+			PasswordEncoder passwordEncoder) {
 		this.countryRepository = countryRepository;
 		this.stateRepository = stateRepository;
 		this.cityRepository = cityRepository;
@@ -66,6 +85,10 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		this.employeeRepository = employeeRepository;
 		this.assetTypeRepository = assetTypeRepository;
 		this.assetRepository = assetRepository;
+		this.authorityRepository = authorityRepository;
+		this.roleRepository = roleRepository;
+		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	/*
@@ -80,6 +103,57 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 	}
 
 	private void initData() {
+
+		// Create authorities.
+		Authority viewAuthority = new Authority();
+		viewAuthority.setName("VIEW");
+		Authority downloadAuthority = new Authority();
+		downloadAuthority.setName("DOWNLOAD");
+		Authority editAuthority = new Authority();
+		editAuthority.setName("EDIT");
+		Authority uploadAuthority = new Authority();
+		uploadAuthority.setName("UPLOAD");
+
+		authorityRepository.save(viewAuthority);
+		authorityRepository.save(downloadAuthority);
+		authorityRepository.save(editAuthority);
+		authorityRepository.save(uploadAuthority);
+
+		// Create roles.
+		Role adminRole = new Role();
+		adminRole.setName("ADMIN");
+		adminRole.setAuthorities(Arrays.asList(viewAuthority, downloadAuthority, editAuthority, uploadAuthority));
+
+		Role userRole = new Role();
+		userRole.setName("USER");
+		userRole.setAuthorities(Arrays.asList(viewAuthority));
+
+		Role artistRole = new Role();
+		artistRole.setName("ARTIST");
+		artistRole.setAuthorities(Arrays.asList(viewAuthority, uploadAuthority));
+
+		Role customerRole = new Role();
+		customerRole.setName("CUSTOMER");
+		customerRole.setAuthorities(Arrays.asList(viewAuthority, downloadAuthority));
+
+		adminRole = roleRepository.save(adminRole);
+		userRole = roleRepository.save(userRole);
+		artistRole = roleRepository.save(artistRole);
+		customerRole = roleRepository.save(customerRole);
+
+		// Create users.
+		User adminUser = new User();
+		adminUser.setEmail("sunny");
+		adminUser.setPassword(passwordEncoder.encode("sunny"));
+		adminUser.setRoles(Arrays.asList(adminRole));
+
+		User testUser = new User();
+		testUser.setEmail("test");
+		testUser.setPassword(passwordEncoder.encode("test"));
+		testUser.setRoles(Arrays.asList(artistRole, customerRole));
+
+		adminUser = userRepository.save(adminUser);
+		testUser = userRepository.save(testUser);
 
 		// Create country.
 		Country ind = new Country("India");
