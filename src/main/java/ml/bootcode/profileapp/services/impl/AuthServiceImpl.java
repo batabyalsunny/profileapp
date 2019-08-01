@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import ml.bootcode.profileapp.config.security.JwtTokenProvider;
@@ -28,20 +27,17 @@ import ml.bootcode.profileapp.services.AuthService;
 public class AuthServiceImpl implements AuthService {
 
 	private EmployeeRepository employeeRepository;
-	private PasswordEncoder passwordEncoder;
 	private AuthenticationManager authenticationManager;
 	private JwtTokenProvider jwtTokenProvider;
 
 	/**
-	 * @param userRepository
-	 * @param passwordEncoder
+	 * @param employeeRepository
 	 * @param authenticationManager
 	 * @param jwtTokenProvider
 	 */
-	public AuthServiceImpl(EmployeeRepository employeeRepository, PasswordEncoder passwordEncoder,
-			AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
+	public AuthServiceImpl(EmployeeRepository employeeRepository, AuthenticationManager authenticationManager,
+			JwtTokenProvider jwtTokenProvider) {
 		this.employeeRepository = employeeRepository;
-		this.passwordEncoder = passwordEncoder;
 		this.authenticationManager = authenticationManager;
 		this.jwtTokenProvider = jwtTokenProvider;
 	}

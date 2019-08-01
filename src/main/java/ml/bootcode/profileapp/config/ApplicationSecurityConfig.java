@@ -61,8 +61,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		// Enable the login and registration routes without auth.
-		http.authorizeRequests().antMatchers(HttpMethod.POST, "/auth/register").permitAll()
-				.antMatchers(HttpMethod.POST, "/auth/login").permitAll().anyRequest().authenticated();
+		http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll().antMatchers("/api/v1/**")
+				.authenticated();
 
 		// Apply Jwt security filter.
 		http.apply(new JwtTokenFilterConfigurer(jwtTokenProvider));

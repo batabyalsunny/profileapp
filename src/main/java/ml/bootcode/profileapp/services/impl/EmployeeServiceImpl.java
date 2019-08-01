@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import ml.bootcode.profileapp.dto.EmployeeDTO;
@@ -23,20 +24,23 @@ import ml.bootcode.profileapp.util.EntityValidator;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-	EmployeeRepository employeeRepository;
-	ModelMapper mapper;
-	EntityValidator entityValidator;
+	private EmployeeRepository employeeRepository;
+	private ModelMapper mapper;
+	private EntityValidator entityValidator;
+	private PasswordEncoder passwordEncoder;
 
 	/**
 	 * @param employeeRepository
 	 * @param mapper
 	 * @param entityValidator
+	 * @param passwordEncoder
 	 */
 	public EmployeeServiceImpl(EmployeeRepository employeeRepository, ModelMapper mapper,
-			EntityValidator entityValidator) {
+			EntityValidator entityValidator, PasswordEncoder passwordEncoder) {
 		this.employeeRepository = employeeRepository;
 		this.mapper = mapper;
 		this.entityValidator = entityValidator;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	/*
@@ -79,7 +83,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
 
-		return mapper.map(employeeRepository.save(mapper.map(employeeDTO, Employee.class)), EmployeeDTO.class);
+		Employee employee = mapper.map(employeeDTO, Employee.class);
+		employee.setPassword(passwordEncoder.encode(employeeDTO.getPassword()));
+
+		return mapper.map(employeeRepository.save(employee), EmployeeDTO.class);
 	}
 
 	/*

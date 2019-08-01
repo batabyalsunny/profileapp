@@ -3,6 +3,7 @@
  */
 package ml.bootcode.profileapp.models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,6 +27,8 @@ public class Employee {
 	private String email;
 	private String phoneNumber;
 	private String password;
+
+	@Column(columnDefinition = "TINYINT(1) default 0")
 	private boolean active;
 
 	@ManyToOne(targetEntity = Address.class)
