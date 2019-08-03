@@ -3,8 +3,6 @@
  */
 package ml.bootcode.profileapp.services;
 
-import org.apache.tomcat.websocket.AuthenticationException;
-
 import ml.bootcode.profileapp.dto.LoginRequestDto;
 import ml.bootcode.profileapp.dto.LoginResponseDto;
 
@@ -14,5 +12,5 @@ import ml.bootcode.profileapp.dto.LoginResponseDto;
  */
 public interface AuthService {
 
-	public LoginResponseDto login(LoginRequestDto loginRequestDto) throws AuthenticationException;
+	public LoginResponseDto login(LoginRequestDto loginRequestDto) throws RuntimeException;
 }

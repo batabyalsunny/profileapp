@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.tomcat.websocket.AuthenticationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import ml.bootcode.profileapp.config.security.JwtTokenProvider;
 import ml.bootcode.profileapp.dto.LoginRequestDto;
 import ml.bootcode.profileapp.dto.LoginResponseDto;
+import ml.bootcode.profileapp.exceptions.ApiException;
 import ml.bootcode.profileapp.models.Employee;
 import ml.bootcode.profileapp.repositories.EmployeeRepository;
 import ml.bootcode.profileapp.services.AuthService;
@@ -43,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
-	public LoginResponseDto login(LoginRequestDto loginRequestDto) throws AuthenticationException {
+	public LoginResponseDto login(LoginRequestDto loginRequestDto) throws RuntimeException {
 		LoginResponseDto loginResponseDto = new LoginResponseDto();
 
 		String email = loginRequestDto.getUsername();
@@ -57,14 +58,14 @@ public class AuthServiceImpl implements AuthService {
 			Optional<Employee> userOptional = employeeRepository.findByEmail(email);
 
 			if (!userOptional.isPresent())
-				throw new AuthenticationException("User not found");
+				throw new ApiException("User not found", HttpStatus.BAD_REQUEST);
 
 			List<String> roles = userOptional.get().getDesignation().getAuthorities().stream()
 					.map(authority -> authority.getName()).collect(Collectors.toList());
 
 			loginResponseDto.setToken(jwtTokenProvider.createToken(email, roles));
 		} catch (Exception e) {
-			throw new AuthenticationException("Invalid username/password supplied");
+			throw new ApiException("Invalid username/password supplied", HttpStatus.BAD_REQUEST);
 		}
 
 		return loginResponseDto;

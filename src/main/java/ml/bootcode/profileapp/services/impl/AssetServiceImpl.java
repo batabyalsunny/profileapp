@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ml.bootcode.profileapp.dto.AssetDTO;
 import ml.bootcode.profileapp.dto.AssetTypeDTO;
+import ml.bootcode.profileapp.exceptions.ApiException;
 import ml.bootcode.profileapp.models.Asset;
 import ml.bootcode.profileapp.models.AssetType;
 import ml.bootcode.profileapp.repositories.AssetRepository;
@@ -166,7 +167,7 @@ public class AssetServiceImpl implements AssetService {
 		File file = new File(asset.getPath());
 
 		if (!file.exists()) {
-			throw new RuntimeException("File not found");
+			throw new ApiException("File not found", HttpStatus.NOT_FOUND);
 		}
 
 		HttpHeaders httpHeaders = new HttpHeaders();
@@ -197,7 +198,7 @@ public class AssetServiceImpl implements AssetService {
 		File file = new File(asset.getPath());
 
 		if (!file.exists()) {
-			throw new RuntimeException("File not found");
+			throw new ApiException("File not found", HttpStatus.NOT_FOUND);
 		}
 
 		MultipartFileSender.fromFile(file).with(request).with(response).serveResource();

@@ -2,8 +2,10 @@ package ml.bootcode.profileapp.util;
 
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import ml.bootcode.profileapp.exceptions.ApiException;
 import ml.bootcode.profileapp.models.Address;
 import ml.bootcode.profileapp.models.Asset;
 import ml.bootcode.profileapp.models.AssetType;
@@ -68,7 +70,7 @@ public class EntityValidator {
 
 		// Check if country is present.
 		if (!countryOptional.isPresent())
-			throw new RuntimeException("Requested country not found");
+			throw new ApiException("Requested country not found", HttpStatus.NOT_FOUND);
 
 		return countryOptional.get();
 	}
@@ -78,7 +80,7 @@ public class EntityValidator {
 		Optional<State> stateOptional = stateRepository.findById(id);
 
 		if (!stateOptional.isPresent())
-			throw new RuntimeException("Requested state not found");
+			throw new ApiException("Requested state not found", HttpStatus.NOT_FOUND);
 
 		return stateOptional.get();
 	}
@@ -88,7 +90,7 @@ public class EntityValidator {
 		Optional<City> cityOptional = cityRepository.findById(id);
 
 		if (!cityOptional.isPresent())
-			throw new RuntimeException("Requested city not found");
+			throw new ApiException("Requested city not found", HttpStatus.NOT_FOUND);
 
 		return cityOptional.get();
 	}
@@ -98,7 +100,7 @@ public class EntityValidator {
 		Optional<Address> addressOptional = addressRepository.findById(id);
 
 		if (!addressOptional.isPresent())
-			throw new RuntimeException("Requested address not found");
+			throw new ApiException("Requested address not found", HttpStatus.NOT_FOUND);
 
 		return addressOptional.get();
 	}
@@ -108,7 +110,7 @@ public class EntityValidator {
 		Optional<Company> companyOptional = companyRepository.findById(id);
 
 		if (!companyOptional.isPresent()) {
-			throw new RuntimeException("Requested company not found");
+			throw new ApiException("Requested company not found", HttpStatus.NOT_FOUND);
 		}
 
 		return companyOptional.get();
@@ -119,7 +121,7 @@ public class EntityValidator {
 		Optional<Designation> designationOptional = designationRepository.findById(id);
 
 		if (!designationOptional.isPresent()) {
-			throw new RuntimeException("Requested designation not found.");
+			throw new ApiException("Requested designation not found.", HttpStatus.NOT_FOUND);
 		}
 
 		return designationOptional.get();
@@ -130,7 +132,7 @@ public class EntityValidator {
 		Optional<Employee> employeeOptional = employeeRepository.findById(id);
 
 		if (!employeeOptional.isPresent()) {
-			throw new RuntimeException("Requested employee not found.");
+			throw new ApiException("Requested employee not found.", HttpStatus.NOT_FOUND);
 		}
 
 		return employeeOptional.get();
@@ -141,7 +143,7 @@ public class EntityValidator {
 		Optional<Asset> assetOptional = assetRepository.findById(id);
 
 		if (!assetOptional.isPresent()) {
-			throw new RuntimeException("Requested asset not found.");
+			throw new ApiException("Requested asset not found.", HttpStatus.NOT_FOUND);
 		}
 
 		return assetOptional.get();
@@ -152,7 +154,7 @@ public class EntityValidator {
 		Optional<AssetType> assetTypeOptional = assetTypeRepository.findById(id);
 
 		if (!assetTypeOptional.isPresent()) {
-			throw new RuntimeException("Requested asset type not found.");
+			throw new ApiException("Requested asset type not found.", HttpStatus.NOT_FOUND);
 		}
 
 		return assetTypeOptional.get();
