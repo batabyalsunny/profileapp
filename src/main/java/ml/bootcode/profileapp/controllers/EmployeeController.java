@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ml.bootcode.profileapp.components.EmployeeComponent;
 import ml.bootcode.profileapp.dto.EmployeeDTO;
+import ml.bootcode.profileapp.dto.SuccessResponseDTO;
 import ml.bootcode.profileapp.services.EmployeeService;
 
 /**
@@ -25,12 +28,15 @@ import ml.bootcode.profileapp.services.EmployeeService;
 public class EmployeeController {
 
 	EmployeeService employeeService;
+	EmployeeComponent employeeComponent;
 
 	/**
 	 * @param employeeService
+	 * @param employeeComponent
 	 */
-	public EmployeeController(EmployeeService employeeService) {
+	public EmployeeController(EmployeeService employeeService, EmployeeComponent employeeComponent) {
 		this.employeeService = employeeService;
+		this.employeeComponent = employeeComponent;
 	}
 
 	@GetMapping
@@ -56,5 +62,10 @@ public class EmployeeController {
 	@DeleteMapping("{id}")
 	public void deleteEmployee(@PathVariable Long id) {
 		employeeService.deleteEmployee(id);
+	}
+
+	@GetMapping("companies/{companyId}")
+	public ResponseEntity<SuccessResponseDTO<List<EmployeeDTO>>> getByCompanyId(@PathVariable Long companyId) {
+		return employeeComponent.getEmployeesOfCompany(companyId);
 	}
 }

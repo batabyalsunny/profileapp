@@ -121,4 +121,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employeeRepository.delete(entityValidator.validateEmployee(id));
 	}
 
+	public List<Employee> getEmployeesOfCompany(Long id) {
+		return employeeRepository.findByCompany(entityValidator.validateCompany(id));
+	}
 }

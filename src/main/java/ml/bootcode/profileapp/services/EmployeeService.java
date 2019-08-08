@@ -6,6 +6,7 @@ package ml.bootcode.profileapp.services;
 import java.util.List;
 
 import ml.bootcode.profileapp.dto.EmployeeDTO;
+import ml.bootcode.profileapp.models.Employee;
 
 /**
  * @author sunnyb
@@ -22,4 +23,6 @@ public interface EmployeeService {
 	EmployeeDTO updateEmployee(Long id, EmployeeDTO employeeDTO);
 
 	void deleteEmployee(Long id);
+
+	List<Employee> getEmployeesOfCompany(Long id);
 }
