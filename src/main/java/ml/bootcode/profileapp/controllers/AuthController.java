@@ -4,6 +4,8 @@
 package ml.bootcode.profileapp.controllers;
 
 import org.apache.tomcat.websocket.AuthenticationException;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,4 +41,9 @@ public class AuthController {
 //	public UserDto register(@RequestBody UserDto userDto) {
 //		return userService.addUser(userDto);
 //	}
+
+	@GetMapping("me")
+	public Authentication me(Authentication authentication) {
+		return authentication;
+	}
 }

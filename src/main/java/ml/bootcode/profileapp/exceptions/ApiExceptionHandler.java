@@ -3,6 +3,9 @@
  */
 package ml.bootcode.profileapp.exceptions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -19,6 +22,8 @@ import ml.bootcode.profileapp.dto.ErrorResponseDTO;
 @ControllerAdvice
 public class ApiExceptionHandler {
 
+	private static final Logger logger = LoggerFactory.getLogger(ApiExceptionHandler.class);
+
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorResponseDTO> handleException(Exception ex) {
 
@@ -32,6 +37,8 @@ public class ApiExceptionHandler {
 
 	@ExceptionHandler(NullPointerException.class)
 	public ResponseEntity<ErrorResponseDTO> handleNullPointerException(NullPointerException ex) {
+
+		logger.debug(ex.getStackTrace().toString());
 
 		String errorMessage = ex.getMessage();
 		errorMessage = (null == errorMessage) ? "Null Pointer Exception" : errorMessage;
@@ -59,5 +66,15 @@ public class ApiExceptionHandler {
 		return new ResponseEntity<>(
 				new ErrorResponseDTO(HttpStatus.METHOD_NOT_ALLOWED.value(), ex.getClass().getName(), ex.getMessage()),
 				HttpStatus.METHOD_NOT_ALLOWED);
+	}
+
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<ErrorResponseDTO> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+
+		logger.debug(ex.getMessage());
+
+		return new ResponseEntity<>(
+				new ErrorResponseDTO(HttpStatus.CONFLICT.value(), ex.getClass().getName(), ex.getMessage()),
+				HttpStatus.CONFLICT);
 	}
 }

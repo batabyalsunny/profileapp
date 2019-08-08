@@ -9,6 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -17,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
  *
  */
 @Entity
+@Table(uniqueConstraints = { @UniqueConstraint(name = "uniqueEmployee", columnNames = { "email", "phoneNumber" }) })
 public class Employee {
 
 	@Id
@@ -25,6 +29,8 @@ public class Employee {
 	private String firstName;
 	private String lastName;
 	private String email;
+
+	@Size(min = 10, max = 10)
 	private String phoneNumber;
 	private String password;
 

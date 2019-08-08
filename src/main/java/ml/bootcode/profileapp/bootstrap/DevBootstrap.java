@@ -164,20 +164,20 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		designationRepository.save(sa);
 
 		// Create Employees.
-		Employee sunny = new Employee("Sunny", "Batabyal", "sunnyb@mindfiresolutions.com", "123456789");
+		Employee sunny = new Employee("Sunny", "Batabyal", "sunnyb@mindfiresolutions.com", "1234567890");
 		sunny.setPassword(passwordEncoder.encode("121"));
 		sunny.setActive(true);
 		sunny.setAddress(basantiNiwas);
 		sunny.setCompany(mfs);
 		sunny.setDesignation(se);
 
-		Employee ashish = new Employee("Ashish", "Roy", "ashish.roy@mindfiresolutions.com", "123456789");
+		Employee ashish = new Employee("Ashish", "Roy", "ashish.roy@mindfiresolutions.com", "1234567890");
 		ashish.setPassword(passwordEncoder.encode("122"));
 		ashish.setAddress(someHydr);
 		ashish.setCompany(att);
 		ashish.setDesignation(sa);
 
-		Employee subhankar = new Employee("Subhankar", "Das", "subhankard@mindfiresolutions.com", "123456789");
+		Employee subhankar = new Employee("Subhankar", "Das", "subhankard@mindfiresolutions.com", "1234567890");
 		subhankar.setPassword(passwordEncoder.encode("123"));
 		subhankar.setAddress(tagoreComplex);
 		subhankar.setCompany(infi);
