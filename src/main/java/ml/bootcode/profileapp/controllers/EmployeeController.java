@@ -2,6 +2,8 @@ package ml.bootcode.profileapp.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,7 +44,7 @@ public class EmployeeController {
 	}
 
 	@PostMapping
-	public EmployeeDTO addEmployee(@RequestBody EmployeeDTO employeeDTO) {
+	public EmployeeDTO addEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) {
 		return employeeService.addEmployee(employeeDTO);
 	}
 

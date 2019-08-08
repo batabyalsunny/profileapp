@@ -3,6 +3,9 @@
  */
 package ml.bootcode.profileapp.dto;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -14,7 +17,11 @@ public class EmployeeDTO {
 	private Long id;
 	private String firstName;
 	private String lastName;
+
+	@Email
 	private String email;
+
+	@NotBlank(message = "10 required")
 	private String phoneNumber;
 	private String password;
 	private boolean active;

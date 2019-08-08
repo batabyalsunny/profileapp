@@ -3,12 +3,17 @@
  */
 package ml.bootcode.profileapp.exceptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.ResponseStatusException;
@@ -75,6 +80,24 @@ public class ApiExceptionHandler {
 
 		return new ResponseEntity<>(
 				new ErrorResponseDTO(HttpStatus.CONFLICT.value(), ex.getClass().getName(), ex.getMessage()),
+				HttpStatus.CONFLICT);
+	}
+
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<ErrorResponseDTO> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+
+		logger.debug(ex.getMessage());
+
+		List<String> errors = new ArrayList<>();
+
+		ex.getBindingResult().getAllErrors().forEach((error) -> {
+			String field = ((FieldError) error).getField();
+			String message = error.getDefaultMessage();
+			errors.add(field + "=>" + message);
+		});
+
+		return new ResponseEntity<>(
+				new ErrorResponseDTO(HttpStatus.CONFLICT.value(), ex.getClass().getName(), errors.toString()),
 				HttpStatus.CONFLICT);
 	}
 }
