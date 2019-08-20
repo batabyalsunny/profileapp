@@ -8,6 +8,11 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +59,29 @@ public class EmployeeServiceImpl implements EmployeeService {
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
 
 		return employeeRepository.findAll().stream().map(employee -> {
+			return mapper.map(employee, EmployeeDTO.class);
+		}).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<EmployeeDTO> getEmployees(int page, int size) {
+
+		Page<Employee> employees = employeeRepository.findAll(PageRequest.of(page, size));
+
+		return employees.getContent().stream().map(employee -> {
+			return mapper.map(employee, EmployeeDTO.class);
+		}).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<EmployeeDTO> getEmployees(int page, int size, String orderBy, String order) {
+
+		Sort sort = order.equals(Direction.DESC.toString()) ? Sort.by(Order.desc(orderBy))
+				: Sort.by(Order.asc(orderBy));
+
+		Page<Employee> employees = employeeRepository.findAll(PageRequest.of(page, size, sort));
+
+		return employees.getContent().stream().map(employee -> {
 			return mapper.map(employee, EmployeeDTO.class);
 		}).collect(Collectors.toList());
 	}
@@ -121,6 +149,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employeeRepository.delete(entityValidator.validateEmployee(id));
 	}
 
+	@Override
 	public List<Employee> getEmployeesOfCompany(Long id) {
 		return employeeRepository.findByCompany(entityValidator.validateCompany(id));
 	}

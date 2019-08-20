@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ml.bootcode.profileapp.components.EmployeeComponent;
@@ -42,6 +43,17 @@ public class EmployeeController {
 	@GetMapping
 	public List<EmployeeDTO> getEmployees() {
 		return employeeService.getEmployees();
+	}
+
+	@GetMapping(params = { "page", "size" })
+	public List<EmployeeDTO> getEmployees(@RequestParam("page") int page, @RequestParam("size") int size) {
+		return employeeService.getEmployees(page, size);
+	}
+
+	@GetMapping(params = { "page", "size", "orderBy", "order" })
+	public List<EmployeeDTO> getEmployees(@RequestParam("page") int page, @RequestParam("size") int size,
+			@RequestParam("orderBy") String orderBy, @RequestParam("order") String order) {
+		return employeeService.getEmployees(page, size, orderBy, order);
 	}
 
 	@GetMapping("{id}")
