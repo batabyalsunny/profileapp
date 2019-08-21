@@ -13,6 +13,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
+import org.springframework.mail.MailException;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,19 +36,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 	private ModelMapper mapper;
 	private EntityValidator entityValidator;
 	private PasswordEncoder passwordEncoder;
+	private MailSender mailSender;
 
 	/**
 	 * @param employeeRepository
 	 * @param mapper
 	 * @param entityValidator
 	 * @param passwordEncoder
+	 * @param mailSender
 	 */
 	public EmployeeServiceImpl(EmployeeRepository employeeRepository, ModelMapper mapper,
-			EntityValidator entityValidator, PasswordEncoder passwordEncoder) {
+			EntityValidator entityValidator, PasswordEncoder passwordEncoder, MailSender mailSender) {
 		this.employeeRepository = employeeRepository;
 		this.mapper = mapper;
 		this.entityValidator = entityValidator;
 		this.passwordEncoder = passwordEncoder;
+		this.mailSender = mailSender;
 	}
 
 	/*
@@ -113,6 +119,23 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		Employee employee = mapper.map(employeeDTO, Employee.class);
 		employee.setPassword(passwordEncoder.encode(employeeDTO.getPassword()));
+
+		// get a thread safe copy of template.
+		SimpleMailMessage message = new SimpleMailMessage();
+
+		message.setTo(employee.getEmail());
+		message.setCc("sunnybatabyal@gmail.com");
+
+		String mailBody = "Dear " + employee.getFirstName() + ", \n\n"
+				+ "Thanks for joining. We Are glad to see you on board!\n\n" + "Regards\nSunny";
+
+		message.setText(mailBody);
+
+		try {
+			mailSender.send(message);
+		} catch (MailException e) {
+			System.err.println(e.getMessage());
+		}
 
 		return mapper.map(employeeRepository.save(employee), EmployeeDTO.class);
 	}
