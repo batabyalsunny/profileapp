@@ -3,6 +3,8 @@
  */
 package ml.bootcode.profileapp.services.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,9 +15,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import ml.bootcode.profileapp.dto.EmpDummy;
 import ml.bootcode.profileapp.dto.EmployeeDTO;
 import ml.bootcode.profileapp.models.Employee;
 import ml.bootcode.profileapp.repositories.EmployeeRepository;
@@ -125,6 +133,24 @@ public class EmployeeServiceImpl implements EmployeeService {
 				+ "Thanks for joining. We Are glad to see you on board!\n\n" + "Regards\nSunny";
 
 		emailSender.send(employee.getEmail(), message);
+
+		RestTemplate restTemplate = new RestTemplate();
+
+		HttpEntity<EmpDummy> request = new HttpEntity<>(
+				new EmpDummy(employee.getFirstName() + employee.getLastName(), 100.00, 25));
+
+		List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
+
+		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+		converter.setSupportedMediaTypes(Arrays.asList(MediaType.TEXT_HTML, MediaType.APPLICATION_JSON));
+
+		messageConverters.add(converter);
+		restTemplate.setMessageConverters(messageConverters);
+
+		EmpDummy emp = restTemplate.postForObject("http://dummy.restapiexample.com/api/v1/create", request,
+				EmpDummy.class);
+
+		System.out.println(emp.toString());
 
 		return dto;
 	}
